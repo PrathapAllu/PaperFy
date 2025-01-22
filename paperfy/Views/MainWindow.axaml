@@ -1,6 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:paperfy.ViewModels"
+        xmlns:vm="using:Paperfy.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:icon="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
@@ -61,7 +61,8 @@
                         </StackPanel>
 
                         <StackPanel Margin="0,25,20,40">
-                            <RadioButton Classes="menuButton" Tag="{StaticResource color5}">
+                            <RadioButton Classes="menuButton" Tag="{StaticResource color5}"
+										 Command="{Binding NavigateCommand}" CommandParameter="capture">
                                 <StackPanel Orientation="Horizontal">
                                     <Image Source="/Assets/avalonia-logo.ico"
                                            Height="20"
@@ -74,7 +75,8 @@
                                 </StackPanel>
                             </RadioButton>
 
-                            <RadioButton Classes="menuButton" Tag="{StaticResource color5}">
+                            <RadioButton Classes="menuButton" Tag="{StaticResource color5}"
+										 Command="{Binding NavigateCommand}" CommandParameter="settings">
                                 <StackPanel Orientation="Horizontal">
                                     <Image Source="/Assets/avalonia-logo.ico"
                                            Height="20"
@@ -87,7 +89,8 @@
                                 </StackPanel>
                             </RadioButton>
 
-                            <RadioButton Classes="menuButton" Tag="{StaticResource color5}">
+                            <RadioButton Classes="menuButton" Tag="{StaticResource color5}"
+										 Command="{Binding NavigateCommand}" CommandParameter="updates">
                                 <StackPanel Orientation="Horizontal">
                                     <Image Source="/Assets/avalonia-logo.ico"
                                            Height="20"
@@ -99,6 +102,20 @@
                                               Foreground="Black"/>
                                 </StackPanel>
                             </RadioButton>
+
+							<RadioButton Classes="menuButton" Tag="{StaticResource color5}"
+										 Command="{Binding NavigateCommand}" CommandParameter="about">
+								<StackPanel Orientation="Horizontal">
+									<Image Source="/Assets/avalonia-logo.ico"
+                                           Height="20"
+                                           Margin="0,0,5,0"/>
+									<TextBlock Text="About"
+                                              Margin="0,0,50,0"
+                                              FontFamily="Montserrat"
+                                              FontWeight="DemiBold"
+                                              Foreground="Black"/>
+								</StackPanel>
+							</RadioButton>
 
                         </StackPanel>
 
@@ -153,8 +170,7 @@
 
                     <!-- Content section -->
                     <Grid Grid.Row="2">
-                        <ContentControl x:Name="MainContent"
-                                      Margin="25"/>
+						<ContentControl Content="{Binding CurrentView}" Margin="25"/>
                     </Grid>
                 </Grid>
             </Border>
