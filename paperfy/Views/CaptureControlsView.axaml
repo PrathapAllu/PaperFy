@@ -37,24 +37,7 @@
           Margin="25">
 
         <!-- Voice Transcription Toggle -->
-        <Border Grid.Row="0"
-                Background="#1A1A1A"
-                CornerRadius="22.5"
-                Height="45"
-                BorderBrush="#333333"
-                BorderThickness="1"
-                Margin="0,0,0,25">
-            <Grid ColumnDefinitions="*,Auto" Margin="20,0">
-                <TextBlock Text="Enable Voice"
-                          Foreground="White"
-                          VerticalAlignment="Center"/>
-                <ToggleSwitch Grid.Column="1"
-                             Margin="0"
-                             OnContent=""
-                             OffContent=""
-                             Command="{Binding CaptureControlsViewModel.ToggleAudioDocumentingCommand}"/>
-            </Grid>
-        </Border>
+
 
         <!-- Start Capture Button -->
         <Button Grid.Row="1"

@@ -2,7 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
-namespace Paperfy.VIews;
+namespace Paperfy.Views;
 
 public partial class AboutView : UserControl
 {
