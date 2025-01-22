@@ -1,9 +1,9 @@
 ﻿using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-
 using Paperfy.ViewModels;
 using Paperfy.Views;
+using PaperFy.Shared.Windows.Service;
 
 namespace Paperfy;
 
@@ -18,17 +18,20 @@ public partial class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
+            var mainViewModel = new MainViewModel(
+                new ApplicationStateService(desktop),
+                desktop.Args
+            );
+
             desktop.MainWindow = new MainWindow
             {
-                DataContext = new MainViewModel()
+                DataContext = mainViewModel
             };
-        }
-        else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
-        {
-            singleViewPlatform.MainView = new MainWindow
+
+            if (true)
             {
-                DataContext = new MainViewModel()
-            };
+                //shellViewModel.Restore();
+            }
         }
 
         base.OnFrameworkInitializationCompleted();
