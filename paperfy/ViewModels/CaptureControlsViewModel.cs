@@ -7,7 +7,9 @@ namespace Paperfy.ViewModels
     {
         private bool isRecordingAudio { get; set; }
 
-        private bool isPausedOrResume { get; set; }
+        private bool isPausedOrResume;
+        public bool IsPauseVisible => !isPausedOrResume;
+        public bool IsResumeVisible => isPausedOrResume;
 
         private bool isDocumentingCancelled { get; set; }
 
@@ -29,8 +31,21 @@ namespace Paperfy.ViewModels
         {
             StartDocumentingCommand = ReactiveCommand.Create(StartDocumenting);
             StopDocumentingCommand = ReactiveCommand.Create(() => { });
-            PauseDocumentingCommand = ReactiveCommand.Create(() => { });
-            ResumeDocumentingCommand = ReactiveCommand.Create(() => { });
+
+            PauseDocumentingCommand = ReactiveCommand.Create(() =>
+            {
+                isPausedOrResume = true;
+                this.RaisePropertyChanged(nameof(IsPauseVisible));
+                this.RaisePropertyChanged(nameof(IsResumeVisible));
+            });
+
+            ResumeDocumentingCommand = ReactiveCommand.Create(() =>
+            {
+                isPausedOrResume = false;
+                this.RaisePropertyChanged(nameof(IsPauseVisible));
+                this.RaisePropertyChanged(nameof(IsResumeVisible));
+            });
+
             CancelDocumentingCommand = ReactiveCommand.Create(() => { });
             ToggleAudioDocumentingCommand = ReactiveCommand.Create(() => { });
         }

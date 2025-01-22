@@ -77,14 +77,26 @@
                     Spacing="15"
                     HorizontalAlignment="Center"
                     Margin="0,0,0,30">
-            <Button Classes="control" Width="90" 
-					Command="{Binding CaptureControlsViewModel.PauseDocumentingCommand}">
-                <StackPanel Orientation="Horizontal" Spacing="5">
-                    <Image Source="/Assets/avalonia-logo.ico"
-                           Height="16"/>
-                    <TextBlock Text="Pause/Resume"/>
-                </StackPanel>
-            </Button>
+			<StackPanel>
+				<Button Classes="control" Width="90"
+						Command="{Binding CaptureControlsViewModel.PauseDocumentingCommand}"
+						IsVisible="{Binding CaptureControlsViewModel.IsPauseVisible}">
+					<StackPanel Orientation="Horizontal" Spacing="5">
+						<Image Source="/Assets/avalonia-logo.ico"
+							   Height="16"/>
+						<TextBlock Text="Pause"/>
+					</StackPanel>
+				</Button>
+				<Button Classes="control" Width="90"
+						Command="{Binding CaptureControlsViewModel.ResumeDocumentingCommand}"
+						IsVisible="{Binding CaptureControlsViewModel.IsResumeVisible}">
+					<StackPanel Orientation="Horizontal" Spacing="5">
+						<Image Source="/Assets/avalonia-logo.ico"
+							   Height="12"/>
+						<TextBlock Text="Resume"/>
+					</StackPanel>
+				</Button>
+			</StackPanel>
 
             <Button Classes="control" Width="90"
 					Command="{Binding CaptureControlsViewModel.StopDocumentingCommand}">
