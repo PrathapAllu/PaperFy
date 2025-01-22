@@ -1,0 +1,115 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+            xmlns:icons="using:Material.Icons.Avalonia"
+            mc:Ignorable="d"
+            x:Class="Paperfy.Views.CaptureControlsView">
+
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto"
+          MaxWidth="400"
+          Margin="25">
+
+        <!-- Voice Transcription Toggle -->
+        <Border Grid.Row="0"
+                Background="#1A1A1A"
+                CornerRadius="22.5"
+                Height="45"
+                BorderBrush="#333333"
+                BorderThickness="1"
+                Margin="0,0,0,25">
+            <Grid ColumnDefinitions="*,Auto" Margin="20,0">
+                <TextBlock Text="Enable Voice"
+                          Foreground="White"
+                          VerticalAlignment="Center"/>
+                <ToggleSwitch Grid.Column="1"
+                             Margin="0"
+                             OnContent=""
+                             OffContent=""
+                             />
+            </Grid>
+        </Border>
+
+        <!-- Start Capture Button -->
+        <Button Grid.Row="1"
+                Height="50"
+                Margin="0,0,0,30"
+                Classes="primary"
+                HorizontalAlignment="Stretch">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <Image Source="/Assets/avalonia-logo.ico"
+                       Height="20"/>
+                <TextBlock Text="Create document"
+                          VerticalAlignment="Center"/>
+            </StackPanel>
+        </Button>
+
+        <!-- Control Buttons -->
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    Spacing="15"
+                    HorizontalAlignment="Center"
+                    Margin="0,0,0,30">
+            <Button Classes="control" Width="90" Click="Button_Click">
+                <StackPanel Orientation="Horizontal" Spacing="5">
+                    <Image Source="/Assets/avalonia-logo.ico"
+                           Height="16"/>
+                    <TextBlock Text="Pause/Resume"/>
+                </StackPanel>
+            </Button>
+
+            <Button Classes="control" Width="90">
+                <StackPanel Orientation="Horizontal" Spacing="5">
+                    <Image Source="/Assets/avalonia-logo.ico"
+                           Height="16"/>
+                    <TextBlock Text="Stop"/>
+                </StackPanel>
+            </Button>
+
+            <Button Classes="control" Width="90">
+                <StackPanel Orientation="Horizontal" Spacing="5">
+                    <Image Source="/Assets/avalonia-logo.ico"
+                           Height="16"/>
+                    <TextBlock Text="Cancel"/>
+                </StackPanel>
+            </Button>
+        </StackPanel>
+
+        <!-- Progress Bar -->
+        <ProgressBar Grid.Row="3"
+                     Value="50"
+                     Maximum="100"
+                     Height="6"
+                     CornerRadius="3"
+                     Background="#1A1A1A"
+                     Foreground="#6C63FF"
+                     BorderBrush="#333333"
+                     BorderThickness="1"/>
+    </Grid>
+
+    <UserControl.Styles>
+        <Style Selector="Button">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="15,10"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+
+        <Style Selector="Button.primary">
+            <Setter Property="Background" Value="#6C63FF"/>
+        </Style>
+
+        <Style Selector="Button.control">
+            <Setter Property="Background" Value="#1A1A1A"/>
+            <Setter Property="BorderBrush" Value="#333333"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Height" Value="40"/>
+        </Style>
+
+        <Style Selector="ToggleSwitch">
+            <Setter Property="OnContent" Value=""/>
+            <Setter Property="OffContent" Value=""/>
+        </Style>
+    </UserControl.Styles>
+</UserControl>

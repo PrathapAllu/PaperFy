@@ -1,0 +1,40 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--Background Colors-->
+    <Color x:Key="primaryBackColor1">#F8F6F0</Color>
+    <Color x:Key="primaryBackColor2">#F8F6F0</Color>
+    <Color x:Key="secondaryBackColor1">#F8F6F0</Color>
+    <Color x:Key="secondaryBackColor2">#210F55</Color>
+
+    <!--Window Border Colors-->
+    <Color x:Key="winBorderColor1">#F8F6F0</Color>
+    <Color x:Key="winBorderColor2">#210F55</Color>
+    <Color x:Key="winBorderColor3">#210F55</Color>
+
+    <!--Color Palette-->
+    <SolidColorBrush x:Key="color1" Color="#E285DE"/>
+    <SolidColorBrush x:Key="color2" Color="#784DFD"/>
+    <SolidColorBrush x:Key="color3" Color="#4ADAEC"/>
+    <SolidColorBrush x:Key="color4" Color="#FB539B"/>
+    <SolidColorBrush x:Key="color5" Color="#7E82FC"/>
+    <SolidColorBrush x:Key="color6" Color="#FFC047"/>
+    <SolidColorBrush x:Key="color7" Color="#EF6C96"/>
+    <SolidColorBrush x:Key="color8" Color="#78A3FC"/>
+    <SolidColorBrush x:Key="color9" Color="#07F3C0"/>
+    <SolidColorBrush x:Key="color10" Color="#FBA1AA"/>
+    <SolidColorBrush x:Key="color11" Color="#FF0000"/>
+
+    <!--Font Colors-->
+    <SolidColorBrush x:Key="titleColor1" Color="Black"/>
+    <SolidColorBrush x:Key="titleColor2" Color="Black"/>
+    <SolidColorBrush x:Key="titleColor3" Color="Black"/>
+    <SolidColorBrush x:Key="plainTextColor1" Color="Yellow"/>
+    <SolidColorBrush x:Key="plainTextColor2" Color="Black"/>
+    <SolidColorBrush x:Key="plainTextColor3" Color="Black"/>
+
+    <!--Panel Colors-->
+    <SolidColorBrush x:Key="panelColor" Color="white"/>
+    <SolidColorBrush x:Key="panelOverColor" Color="white"/>
+    <SolidColorBrush x:Key="panelActiveColor" Color="white"/>
+</ResourceDictionary>

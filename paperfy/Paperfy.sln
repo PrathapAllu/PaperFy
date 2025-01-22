@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35707.178 d17.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paperfy", "Paperfy.csproj", "{F949B3CA-4F6C-40DF-A6CF-5B7483851CE6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paperfy.Desktop", "..\paperfy.Desktop\Paperfy.Desktop.csproj", "{B388CEC6-C0CF-4D21-A37C-FF40995ADA54}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaperFy.Shared", "..\PaperFy.Shared\PaperFy.Shared.csproj", "{37598EB4-6FCE-44CE-B517-4F0994806873}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F949B3CA-4F6C-40DF-A6CF-5B7483851CE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F949B3CA-4F6C-40DF-A6CF-5B7483851CE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F949B3CA-4F6C-40DF-A6CF-5B7483851CE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F949B3CA-4F6C-40DF-A6CF-5B7483851CE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B388CEC6-C0CF-4D21-A37C-FF40995ADA54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B388CEC6-C0CF-4D21-A37C-FF40995ADA54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B388CEC6-C0CF-4D21-A37C-FF40995ADA54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B388CEC6-C0CF-4D21-A37C-FF40995ADA54}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37598EB4-6FCE-44CE-B517-4F0994806873}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37598EB4-6FCE-44CE-B517-4F0994806873}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37598EB4-6FCE-44CE-B517-4F0994806873}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37598EB4-6FCE-44CE-B517-4F0994806873}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

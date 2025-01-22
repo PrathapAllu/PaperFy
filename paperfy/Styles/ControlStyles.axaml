@@ -1,0 +1,126 @@
+<Styles xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:icons="using:Material.Icons.Avalonia">
+
+    <Style Selector="RadioButton.menuButton">
+        <Setter Property="Height" Value="30"/>
+        <Setter Property="Width" Value="200"/>
+        <Setter Property="Margin" Value="0,0,5,5"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Background="{TemplateBinding Background}"
+                        BorderThickness="5,0,0,0"
+                        BorderBrush="{TemplateBinding BorderBrush}">
+                    <ContentPresenter HorizontalAlignment="Center"
+                                     VerticalAlignment="Center"
+                                     Content="{TemplateBinding Content}"/>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+    <Style Selector="RadioButton.menuButton:pointerover">
+        <Setter Property="Margin" Value="0,0,5,5"/>
+        <Setter Property="Background" Value="{DynamicResource panelOverColor}"/>
+        <Setter Property="Foreground" Value="White"/>
+         <Setter Property="BorderBrush" Value="{Binding Tag, RelativeSource={RelativeSource Self}}"/>
+    </Style>
+
+    <Style Selector="RadioButton.menuButton:checked">
+        <Setter Property="Margin" Value="0,0,5,5"/>
+        <Setter Property="Background" Value="{DynamicResource panelActiveColor}"/>
+        <Setter Property="BorderBrush" Value="{Binding Tag, RelativeSource={RelativeSource Self}}"/>
+    </Style>
+
+    <Style Selector="RadioButton.menuButton">
+        <Setter Property="Height" Value="30"/>
+        <Setter Property="Width" Value="200"/>
+        <Setter Property="Margin" Value="0,0,5,5"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Background="{TemplateBinding Background}"
+                        BorderThickness="5,0,0,0"
+                        BorderBrush="{TemplateBinding BorderBrush}">
+                    <ContentPresenter HorizontalAlignment="Center"
+                                     VerticalAlignment="Center"
+                                     Content="{TemplateBinding Content}"/>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+    <Style Selector="RadioButton.menuButton:pointerover">
+        <Setter Property="Margin" Value="0,0,5,5"/>
+        <Setter Property="Background" Value="{DynamicResource panelOverColor}"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="BorderBrush" Value="{Binding Tag, RelativeSource={RelativeSource Self}}"/>
+    </Style>
+
+    <Style Selector="RadioButton.menuButton:checked">
+        <Setter Property="Margin" Value="0,0,5,5"/>
+        <Setter Property="Background" Value="{DynamicResource panelActiveColor}"/>
+        <Setter Property="BorderBrush" Value="{Binding Tag, RelativeSource={RelativeSource Self}}"/>
+    </Style>
+
+    <!-- Menu Button Icon -->
+    <Style Selector="icons|MaterialIcon.menuButtonIcon">
+        <Setter Property="Foreground" Value="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}"/>
+        <Setter Property="Width" Value="22"/>
+        <Setter Property="Height" Value="22"/>
+        <Setter Property="Margin" Value="35,0,20,0"/>
+    </Style>
+
+    <!-- Menu Button Text -->
+    <Style Selector="TextBlock.menuButtonText">
+        <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource TemplatedParent}}"/>
+        <Setter Property="FontFamily" Value="Montserrat"/>
+        <Setter Property="FontWeight" Value="Medium"/>
+        <Setter Property="FontSize" Value="13.5"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
+    <!-- Control Bar Button -->
+    <Style Selector="Button.controlButton">
+        <Setter Property="Width" Value="35"/>
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Background="{TemplateBinding Background}"
+                        CornerRadius="10">
+                    <ContentPresenter HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"/>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+    <Style Selector="Button.controlButton:pointerover">
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="Foreground" Value="{Binding Tag, RelativeSource={RelativeSource Self}}"/>
+    </Style>
+
+    <!-- Icon Button -->
+    <Style Selector="Button.iconButton">
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Width" Value="25"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{DynamicResource plainTextColor1}"/>
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Background="{TemplateBinding Background}">
+                    <ContentPresenter HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"/>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+    <Style Selector="Button.iconButton:pointerover">
+        <Setter Property="Foreground" Value="{Binding Tag, RelativeSource={RelativeSource Self}}"/>
+    </Style>
+</Styles>

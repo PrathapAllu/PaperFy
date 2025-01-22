@@ -1,0 +1,18 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="Paperfy.App"
+             RequestedThemeVariant="Default">
+
+    <Application.Resources>
+    <ResourceDictionary>
+        <ResourceDictionary.MergedDictionaries>
+            <MergeResourceInclude Source="Styles/Colors.axaml" />
+        </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+    </Application.Resources>
+
+    <Application.Styles>
+        <FluentTheme />
+        <StyleInclude Source="avares://Paperfy/Styles/ControlStyles.axaml"/>
+    </Application.Styles>
+</Application>
