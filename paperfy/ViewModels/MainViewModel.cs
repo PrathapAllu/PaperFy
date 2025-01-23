@@ -6,6 +6,7 @@ using System.Windows.Input;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia;
+using Paperfy;
 
 public class MainViewModel : ViewModelBase
 {
