@@ -100,15 +100,14 @@
             </Button>
         </StackPanel>
 
-        <!-- Progress Bar -->
-        <ProgressBar Grid.Row="3"
-                     Value="50"
-                     Maximum="100"
-                     Height="6"
-                     CornerRadius="3"
-                     Background="#1A1A1A"
-                     Foreground="#6C63FF"
-                     BorderBrush="#333333"
-                     BorderThickness="1"/>
+        <!-- status -->
+		<StackPanel Grid.Row="3" Orientation="Horizontal">
+			<TextBlock Text="Status: "
+		   FontSize="20"/>
+			<TextBlock Grid.Row="3"
+			   Text="Idle"
+			   FontSize="20"/>
+		</StackPanel>
+
     </Grid>
 </UserControl>

@@ -4,5 +4,53 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Paperfy.Views.CheckForUpdatesView">
- Check  for updates view
+
+	<Grid RowDefinitions="*,Auto" MaxWidth="300" Margin="30" Background="#000000">
+		<!-- Update Status -->
+		<StackPanel Grid.Row="0" Spacing="15">
+			<!-- Circular Progress -->
+			<Grid Width="100" Height="100" HorizontalAlignment="Center">
+				<Arc StartAngle="0" SweepAngle="360" Stroke="#27272A"
+                     StrokeThickness="6"/>
+				<Arc StartAngle="0" SweepAngle="270" Stroke="#8B5CF6"
+                     StrokeThickness="6"/>
+
+				<Border Width="40" Height="40" CornerRadius="20" Background="#27272A"
+                        HorizontalAlignment="Center" VerticalAlignment="Center">
+					<Path Data="M20,10 A10,10 0 1,1 10,20 M20,30 L27,23 L20,23 Z"
+                          Stroke="#8B5CF6" StrokeThickness="1.5" Fill="#8B5CF6"/>
+				</Border>
+			</Grid>
+
+			<!-- Status Text -->
+			<StackPanel Spacing="3" HorizontalAlignment="Center">
+				<TextBlock Text="Up to Date" FontSize="18" FontWeight="SemiBold"
+                         Foreground="White" HorizontalAlignment="Center"/>
+				<TextBlock Text="You're running the latest version" FontSize="13" Foreground="#71717A"
+                         HorizontalAlignment="Center"/>
+			</StackPanel>
+		</StackPanel>
+
+		<!-- Action Button -->
+		<Button Grid.Row="1" Classes="primary" Content="Check for Updates"
+                HorizontalAlignment="Stretch" Height="40" Margin="0,15,0,0"
+                FontSize="14"/>
+	</Grid>
+
+	<UserControl.Styles>
+		<Style Selector="Button.primary">
+			<Setter Property="Background">
+				<Setter.Value>
+					<LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+						<GradientStop Offset="0" Color="#8B5CF6"/>
+						<GradientStop Offset="1" Color="#7C3AED"/>
+					</LinearGradientBrush>
+				</Setter.Value>
+			</Setter>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="CornerRadius" Value="20"/>
+			<Setter Property="HorizontalContentAlignment" Value="Center"/>
+			<Setter Property="VerticalContentAlignment" Value="Center"/>
+		</Style>
+	</UserControl.Styles>
 </UserControl>

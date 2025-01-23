@@ -36,7 +36,10 @@ namespace Paperfy.ViewModels
 
             screenCaptureService = ApplicationManager.ScreenCaptureService;
 
-            StartDocumentingCommand = ReactiveCommand.Create(StartDocumenting);
+            StartDocumentingCommand = ReactiveCommand.Create(() =>
+            {
+                parent.SwitchView("predocumenting");
+            });
             StopDocumentingCommand = ReactiveCommand.Create(() => { });
             PauseDocumentingCommand = ReactiveCommand.Create(() =>
             {
@@ -53,13 +56,6 @@ namespace Paperfy.ViewModels
 
             CancelDocumentingCommand = ReactiveCommand.Create(() => { });
             ToggleAudioDocumentingCommand = ReactiveCommand.Create(() => { });
-        }
-
-        public void StartDocumenting()
-        {
-            base.Parent.Minimize();
-            ApplicationManager.DocumenterService?.StartDocumenting(false);
-            
         }
     }
 }

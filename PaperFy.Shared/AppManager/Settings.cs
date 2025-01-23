@@ -16,10 +16,6 @@ namespace PaperFy.Shared.AppManager
 
         private bool captureSpecialKeys = true;
 
-        private string taskID;
-
-        private string token;
-
         //private UserResponseType? user;
 
         public static Settings Instance { get; private set; } = new Settings();

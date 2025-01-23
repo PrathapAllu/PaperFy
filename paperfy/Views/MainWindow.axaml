@@ -146,7 +146,7 @@
 
                     <!-- Content section -->
                     <Grid Grid.Row="2">
-						<ContentControl Content="{Binding CurrentView}" Margin="25"/>
+						<ContentControl Content="{Binding CurrentView}" Margin="15"/>
                     </Grid>
                 </Grid>
             </Border>

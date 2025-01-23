@@ -33,8 +33,6 @@ namespace PaperFy.Shared.AppManager
             {
                 InitializeServices();
                 applicationBuilder().StartWithClassicDesktopLifetime(arguments);
-                AudioCaptureService?.Dispose();
-                PlatformSystemService?.Dispose();
             }
             catch (Exception exception)
             {

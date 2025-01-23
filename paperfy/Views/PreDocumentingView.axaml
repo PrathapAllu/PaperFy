@@ -2,27 +2,112 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="Paperfy.Views.PreDocumentingView">
-			 <Grid>
-				 <Border Grid.Row="0"
-		 Background="#1A1A1A"
-		 CornerRadius="22.5"
-		 Height="45"
-		 BorderBrush="#333333"
-		 BorderThickness="1"
-		 Margin="0,0,0,25">
-					 <Grid ColumnDefinitions="*,Auto" Margin="20,0">
-						 <TextBlock Text="Enable Voice"
-								   Foreground="White"
-								   VerticalAlignment="Center"/>
-						 <ToggleSwitch Grid.Column="1"
-									  Margin="0"
-									  OnContent=""
-									  OffContent=""
-									  Command="{Binding CaptureControlsViewModel.ToggleAudioDocumentingCommand}"/>
-					 </Grid>
-				 </Border>
-			 </Grid>
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="Paperfy.Views.PreDocumentingView"
+             Background="#18181B">
 
+	<StackPanel Spacing="20" Margin="20">
+		<!-- Document Name Input -->
+		<TextBox Watermark="Enter document name..."
+                 Height="50"
+                 CornerRadius="12"
+                 Background="#27272A"
+                 Foreground="White"
+                 BorderThickness="1"
+                 BorderBrush="#3F3F46"
+                 Padding="15,0"
+                 VerticalContentAlignment="Center"
+                 Text="{Binding DocumentName}"/>
+
+		<!-- Options Container -->
+		<Border Background="#27272A"
+				CornerRadius="12"
+				Padding="20,15">
+			<Grid ColumnDefinitions="*,Auto"
+				  RowDefinitions="Auto,Auto,Auto,Auto"
+				  Margin="0,0,0,20">
+
+				<!-- Voice Recording -->
+				<TextBlock Text="Enable Voice Recording"
+						  Foreground="White"
+						  VerticalAlignment="Center"/>
+				<ToggleSwitch Grid.Column="1"
+							 IsChecked="{Binding EnableVoice}"
+							 OnContent=""
+							 OffContent=""/>
+
+				<!-- Keyboard Input -->
+				<TextBlock Text="Capture Keyboard Input"
+						  Grid.Row="1"
+						  Foreground="White"
+						  VerticalAlignment="Center"/>
+				<ToggleSwitch Grid.Row="1"
+							 Grid.Column="1"
+							 IsChecked="{Binding EnableKeyboard}"
+							 OnContent=""
+							 OffContent=""/>
+
+				<!-- Shift+Click -->
+				<TextBlock Text="Shift + Click to Capture"
+						  Grid.Row="2"
+						  Foreground="White"
+						  VerticalAlignment="Center"/>
+				<ToggleSwitch Grid.Row="2"
+							 Grid.Column="1"
+							 IsChecked="{Binding EnableShiftClick}"
+							 OnContent=""
+							 OffContent=""/>
+
+				<!-- Import Pictures Button -->
+				<TextBlock Text="Import Pictures to Create Document"
+						  Grid.Row="3"
+						  Foreground="White"
+						  VerticalAlignment="Center"/>
+				<Button Grid.Row="3"
+						Grid.Column="1"
+						Classes="outline"
+						Content="Import"
+						FontSize="10"
+						Height="25"
+						Width="80"
+						CornerRadius="25"
+						HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+						Command="{Binding ImportPicturesCommand}"/>
+			</Grid>
+		</Border>
+
+		<StackPanel Orientation="Horizontal">
+			<!-- Start Button -->
+			<Button Classes="primary"
+					Content="Start Recording"
+				HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+					Height="40"
+					CornerRadius="25"
+					Command="{Binding StartRecordingCommand}"/>
+
+			<Button Classes="primary" Margin="5,0,0,0"
+			Content="Cancel"
+		HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+			Height="40"
+			CornerRadius="25"
+			Command="{Binding CancelRecordCommand}"/>
+		</StackPanel>
+	</StackPanel>
+
+	<UserControl.Styles>
+		<Style Selector="Button.primary">
+			<Setter Property="Background" Value="#8B5CF6"/>
+			<Setter Property="Foreground" Value="White"/>
+		</Style>
+		<Style Selector="Button.outline">
+			<Setter Property="Background" Value="#27272A"/>
+			<Setter Property="BorderBrush" Value="#8B5CF6"/>
+			<Setter Property="BorderThickness" Value="2"/>
+			<Setter Property="Foreground" Value="White"/>
+		</Style>
+		<Style Selector="ToggleSwitch">
+			<Setter Property="OnContent" Value=""/>
+			<Setter Property="OffContent" Value=""/>
+		</Style>
+	</UserControl.Styles>
 </UserControl>
