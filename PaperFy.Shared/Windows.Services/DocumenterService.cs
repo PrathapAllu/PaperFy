@@ -34,9 +34,13 @@ namespace PaperFy.Shared.Windows.Services
 
         private MouseEvent LastMouseEvent = new MouseEvent(0, 0, MouseButton.Left, string.Empty, string.Empty, SystemService.Instance.CurrentTimestamp);
 
-        public DocumenterService(IScreenCaptureService screenCaptureService)
+        public DocumenterService(IScreenCaptureService screenCaptureService, IControlCaptureService ControlCaptureService)
         {
             ScreenCaptureService = screenCaptureService;
+            ControlCaptureService = ControlCaptureService;
+
+            EventAggregator.Instance.Subscribe<KeyboardCaptureEvent>(OnKeyboardCaptureEvent);
+            EventAggregator.Instance.Subscribe<MouseCaptureEvent>(OnMouseCaptureEvent);
         }
 
         public void StartCapture()

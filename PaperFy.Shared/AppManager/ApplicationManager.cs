@@ -44,8 +44,8 @@ namespace PaperFy.Shared.AppManager
         }
 
         private static void InitializeServices()
-        {
-            DocumenterService = new DocumenterService(ScreenCaptureService);
+        {           
+            DocumenterService = new DocumenterService(ScreenCaptureService, ControlCaptureService);
         }
     }
 }
