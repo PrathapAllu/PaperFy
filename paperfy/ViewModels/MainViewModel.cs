@@ -3,6 +3,9 @@ using Paperfy.ViewModels;
 using Paperfy.Views;
 using ReactiveUI;
 using System.Windows.Input;
+using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia;
 
 public class MainViewModel : ViewModelBase
 {
@@ -17,6 +20,9 @@ public class MainViewModel : ViewModelBase
     private readonly SettingsView _settingsView;
     private readonly CheckForUpdatesView _updatesView;
     private readonly AboutView _aboutView;
+
+    internal IClassicDesktopStyleApplicationLifetime DesktopLifetime => Application.Current.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime;
+    internal MainWindow MainWindow => DesktopLifetime?.MainWindow as MainWindow;
 
     public CaptureControlsViewModel CaptureControlsViewModel { get; }
 
@@ -43,4 +49,12 @@ public class MainViewModel : ViewModelBase
     };
 
     public ICommand NavigateCommand { get; }
+
+    public void Minimize()
+    {
+        if (MainWindow != null)
+        {
+            MainWindow.WindowState = WindowState.Minimized;
+        }
+    }
 }

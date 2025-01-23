@@ -11,6 +11,7 @@
     <PackageReference Include="Interop.UIAutomationClient" Version="10.19041.0" />
     <PackageReference Include="Interop.UIAutomationCore" Version="10.19041.0" />
     <PackageReference Include="NAudio" Version="2.2.1" />
+    <PackageReference Include="SixLabors.Shapes" Version="1.0.0-beta0009" />
     <PackageReference Include="System.Drawing.Common" Version="9.0.1" />
     <PackageReference Include="UIAutomationNetCoreLibrary" Version="1.0.0" />
   </ItemGroup>
