@@ -1,4 +1,5 @@
-﻿using PaperFy.Shared.AppManager;
+﻿using Paperfy.Models;
+using PaperFy.Shared.AppManager;
 using ReactiveUI;
 using System.Windows.Input;
 
@@ -45,7 +46,15 @@ public class PreDocumentingViewModel : ParentViewModel
     {
         _mainViewModel = parent;
         ImportPicturesCommand = ReactiveCommand.Create(ImportPictures);
-        StartRecordingCommand = ReactiveCommand.Create(StartRecording);
+        StartRecordingCommand = ReactiveCommand.Create(() =>
+        {
+            LocalSettings.Instance.IsAppDocumenting = true;
+            base.Parent.Minimize();
+            ApplicationManager.DocumenterService?.StartDocumenting(false);
+            
+            parent.SwitchView("capture");
+        });
+
         CancelRecordCommand = ReactiveCommand.Create(() =>
         {
             parent.SwitchView("capture");
@@ -55,11 +64,5 @@ public class PreDocumentingViewModel : ParentViewModel
     private void ImportPictures()
     {
         // Picture import logic
-    }
-
-    private void StartRecording()
-    {
-        base.Parent.Minimize();
-        ApplicationManager.DocumenterService?.StartDocumenting(false);
     }
 }

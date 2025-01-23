@@ -16,8 +16,6 @@ namespace PaperFy.Shared.AppManager
 
         private bool captureSpecialKeys = true;
 
-        //private UserResponseType? user;
-
         public static Settings Instance { get; private set; } = new Settings();
 
         [JsonPropertyName("capture_keyboard_events")]
@@ -79,69 +77,6 @@ namespace PaperFy.Shared.AppManager
                 }
             }
         }
-
-        //[JsonPropertyName("user")]
-        //public UserResponseType? User
-        //{
-        //	get
-        //	{
-        //		return user;
-        //	}
-        //	set
-        //	{
-        //		if (!(user == value))
-        //		{
-        //			user = ((value?.ID != null) ? value : null);
-        //			if (!isLoading)
-        //			{
-        //				EventAggregator.Instance.Publish(new SettingChangedEvent("User", User));
-        //				Save();
-        //			}
-        //		}
-        //	}
-        //}
-
-        //[JsonPropertyName("user")]
-        //public UserResponseType? User
-        //{
-        //    get => user ?? new UserResponseType
-        //    {
-        //        ID = "mock-id",
-        //        Email = "mock@email.com",
-        //        FirstName = "MockFirst",
-        //        LastName = "MockLast",
-        //        IsEmailVerified = true,
-        //        InstalledDesktopRecorder = false,
-        //        ProfilePictureUrl = "",
-        //        Organizations = new List<OrganizationResponseType>(),
-        //        ActiveOrganization = new OrganizationResponseType
-        //        {
-        //            ID = "mock-org-id",
-        //            Name = "Mock Org",
-        //            PermissionLevel = PermissionLevelResponseType.Admin,
-        //            SmartPrivacyScreenEnabled = false,
-        //            SuperOrganization = new SuperOrganizationResponseType
-        //            {
-        //                ID = "mock-super-org-id",
-        //                Name = "Mock Super Org",
-        //                AllowDesktop = true,
-        //                ShowBlockWorkspaceModal = false
-        //            }
-        //        }
-        //    };
-        //    set
-        //    {
-        //        if (user != value)
-        //        {
-        //            user = (value?.ID != null) ? value : User;
-        //            if (!isLoading)
-        //            {
-        //                EventAggregator.Instance.Publish(new SettingChangedEvent("User", User));
-        //                Save();
-        //            }
-        //        }
-        //    }
-        //}
 
         protected string SettingsFilePath => Path.Combine(SystemService.Instance.LocalApplicationDataPath, "Persisted Data");
 
