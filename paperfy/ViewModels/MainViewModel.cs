@@ -7,9 +7,11 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia;
 using Paperfy;
+using System;
 
 public class MainViewModel : ViewModelBase
 {
+    public string UserName { get; set; } = Environment.UserName;
     private object _currentView;
     public object CurrentView
     {
