@@ -34,14 +34,14 @@
 			<Button Classes="link" HorizontalAlignment="Stretch" Height="45" Margin="0,10,0,0">
 				<StackPanel Orientation="Horizontal" Spacing="10">
 					<Ellipse Width="25" Height="25" Fill="#8B5CF6" Opacity="0.2"/>
-					<TextBlock Text="Contact" VerticalAlignment="Center" FontSize="14"/>
+					<TextBlock Text="FAQ's" VerticalAlignment="Center" FontSize="14"/>
 				</StackPanel>
 			</Button>
 
 			<!-- Copyright -->
 			<StackPanel Spacing="8" Margin="0,15,0,0">
 				<Border Height="1" Background="#71717A" Opacity="0.3"/>
-				<TextBlock Text="© 2024 PaperFy. All rights reserved." FontSize="11"
+				<TextBlock Text="© 2025 PaperFy. All rights reserved." FontSize="11"
                          Foreground="#71717A" HorizontalAlignment="Center"/>
 			</StackPanel>
 		</StackPanel>
