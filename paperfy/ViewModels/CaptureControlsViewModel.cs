@@ -1,4 +1,7 @@
-﻿using ReactiveUI;
+﻿using PaperFy.Shared.AppManager;
+using PaperFy.Shared.Interface;
+using PaperFy.Shared.Windows.Services;
+using ReactiveUI;
 using System.Windows.Input;
 
 namespace Paperfy.ViewModels
@@ -13,6 +16,7 @@ namespace Paperfy.ViewModels
 
         private bool isDocumentingCancelled { get; set; }
 
+        private readonly IScreenCaptureService screenCaptureService;
 
         public ICommand CancelDocumentingCommand { get; }
 
@@ -29,16 +33,17 @@ namespace Paperfy.ViewModels
 
         public CaptureControlsViewModel(MainViewModel parent) : base(parent)
         {
+
+            screenCaptureService = ApplicationManager.ScreenCaptureService;
+
             StartDocumentingCommand = ReactiveCommand.Create(StartDocumenting);
             StopDocumentingCommand = ReactiveCommand.Create(() => { });
-
             PauseDocumentingCommand = ReactiveCommand.Create(() =>
             {
                 isPausedOrResume = true;
                 this.RaisePropertyChanged(nameof(IsPauseVisible));
                 this.RaisePropertyChanged(nameof(IsResumeVisible));
             });
-
             ResumeDocumentingCommand = ReactiveCommand.Create(() =>
             {
                 isPausedOrResume = false;
@@ -51,6 +56,10 @@ namespace Paperfy.ViewModels
         }
 
         public void StartDocumenting()
-        { }
+        {
+            base.Parent.Minimize();
+            ApplicationManager.DocumenterService?.StartDocumenting(false);
+            
+        }
     }
 }
