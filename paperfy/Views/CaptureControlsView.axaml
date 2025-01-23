@@ -6,36 +6,46 @@
             mc:Ignorable="d"
             x:Class="Paperfy.Views.CaptureControlsView">
 
+	<UserControl.Styles>
+		<Style Selector="Button">
+			<Setter Property="HorizontalAlignment" Value="Center"/>
+			<Setter Property="VerticalAlignment" Value="Center"/>
+			<Setter Property="Padding" Value="15,10"/>
+			<Setter Property="CornerRadius" Value="8"/>
+			<Setter Property="Foreground" Value="White"/>
+		</Style>
+
+		<Style Selector="Button.primary">
+			<Setter Property="Background" Value="#6C63FF"/>
+		</Style>
+
+		<Style Selector="Button.control">
+			<Setter Property="Background" Value="#1A1A1A"/>
+			<Setter Property="BorderBrush" Value="#333333"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="Height" Value="40"/>
+		</Style>
+
+		<Style Selector="ToggleSwitch">
+			<Setter Property="OnContent" Value=""/>
+			<Setter Property="OffContent" Value=""/>
+		</Style>
+	</UserControl.Styles>
+
     <Grid RowDefinitions="Auto,Auto,Auto,Auto"
           MaxWidth="400"
           Margin="25">
 
         <!-- Voice Transcription Toggle -->
-        <Border Grid.Row="0"
-                Background="#1A1A1A"
-                CornerRadius="22.5"
-                Height="45"
-                BorderBrush="#333333"
-                BorderThickness="1"
-                Margin="0,0,0,25">
-            <Grid ColumnDefinitions="*,Auto" Margin="20,0">
-                <TextBlock Text="Enable Voice"
-                          Foreground="White"
-                          VerticalAlignment="Center"/>
-                <ToggleSwitch Grid.Column="1"
-                             Margin="0"
-                             OnContent=""
-                             OffContent=""
-                             />
-            </Grid>
-        </Border>
+
 
         <!-- Start Capture Button -->
         <Button Grid.Row="1"
                 Height="50"
                 Margin="0,0,0,30"
                 Classes="primary"
-                HorizontalAlignment="Stretch">
+                HorizontalAlignment="Stretch"
+				Command="{Binding CaptureControlsViewModel.StartDocumentingCommand}">
             <StackPanel Orientation="Horizontal" Spacing="10">
                 <Image Source="/Assets/avalonia-logo.ico"
                        Height="20"/>
@@ -50,15 +60,29 @@
                     Spacing="15"
                     HorizontalAlignment="Center"
                     Margin="0,0,0,30">
-            <Button Classes="control" Width="90" Click="Button_Click">
-                <StackPanel Orientation="Horizontal" Spacing="5">
-                    <Image Source="/Assets/avalonia-logo.ico"
-                           Height="16"/>
-                    <TextBlock Text="Pause/Resume"/>
-                </StackPanel>
-            </Button>
+			<StackPanel>
+				<Button Classes="control" Width="90"
+						Command="{Binding CaptureControlsViewModel.PauseDocumentingCommand}"
+						IsVisible="{Binding CaptureControlsViewModel.IsPauseVisible}">
+					<StackPanel Orientation="Horizontal" Spacing="5">
+						<Image Source="/Assets/avalonia-logo.ico"
+							   Height="16"/>
+						<TextBlock Text="Pause"/>
+					</StackPanel>
+				</Button>
+				<Button Classes="control" Width="90"
+						Command="{Binding CaptureControlsViewModel.ResumeDocumentingCommand}"
+						IsVisible="{Binding CaptureControlsViewModel.IsResumeVisible}">
+					<StackPanel Orientation="Horizontal" Spacing="5">
+						<Image Source="/Assets/avalonia-logo.ico"
+							   Height="12"/>
+						<TextBlock Text="Resume"/>
+					</StackPanel>
+				</Button>
+			</StackPanel>
 
-            <Button Classes="control" Width="90">
+            <Button Classes="control" Width="90"
+					Command="{Binding CaptureControlsViewModel.StopDocumentingCommand}">
                 <StackPanel Orientation="Horizontal" Spacing="5">
                     <Image Source="/Assets/avalonia-logo.ico"
                            Height="16"/>
@@ -66,7 +90,8 @@
                 </StackPanel>
             </Button>
 
-            <Button Classes="control" Width="90">
+            <Button Classes="control" Width="90"
+					Command="{Binding CaptureControlsViewModel.CancelDocumentingCommand}">
                 <StackPanel Orientation="Horizontal" Spacing="5">
                     <Image Source="/Assets/avalonia-logo.ico"
                            Height="16"/>
@@ -86,30 +111,4 @@
                      BorderBrush="#333333"
                      BorderThickness="1"/>
     </Grid>
-
-    <UserControl.Styles>
-        <Style Selector="Button">
-            <Setter Property="HorizontalAlignment" Value="Center"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="Padding" Value="15,10"/>
-            <Setter Property="CornerRadius" Value="8"/>
-            <Setter Property="Foreground" Value="White"/>
-        </Style>
-
-        <Style Selector="Button.primary">
-            <Setter Property="Background" Value="#6C63FF"/>
-        </Style>
-
-        <Style Selector="Button.control">
-            <Setter Property="Background" Value="#1A1A1A"/>
-            <Setter Property="BorderBrush" Value="#333333"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Height" Value="40"/>
-        </Style>
-
-        <Style Selector="ToggleSwitch">
-            <Setter Property="OnContent" Value=""/>
-            <Setter Property="OffContent" Value=""/>
-        </Style>
-    </UserControl.Styles>
 </UserControl>

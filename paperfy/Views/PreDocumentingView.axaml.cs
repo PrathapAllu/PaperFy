@@ -4,9 +4,9 @@ using Avalonia.Markup.Xaml;
 
 namespace Paperfy.Views;
 
-public partial class CheckForUpdatesView : UserControl
+public partial class PreDocumentingView : UserControl
 {
-    public CheckForUpdatesView()
+    public PreDocumentingView()
     {
         InitializeComponent();
     }

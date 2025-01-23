@@ -10,18 +10,4 @@ public partial class CaptureControlsView : UserControl
     {
         InitializeComponent();
     }
-
-    private void Button_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
-    {
-        var window = new Window
-        {
-            Content = new ScreenShotEditorView(),
-            // Optional: Set window properties
-            Width = 800,
-            Height = 600,
-            WindowStartupLocation = WindowStartupLocation.CenterScreen
-        };
-
-        window.Show();
-    }
 }

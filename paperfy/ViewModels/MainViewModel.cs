@@ -1,13 +1,18 @@
-﻿using Paperfy.Views;
+﻿using Paperfy.ViewModels;
+using Paperfy.Views;
+using PaperFy.Shared.Windows.Service;
 
-namespace Paperfy.ViewModels;
-
-public class MainViewModel : ViewModelBase
+namespace Paperfy.ViewModels 
 {
-    public CaptureControlsViewModel CaptureControlsViewModel { get; }
-
-    public MainViewModel() 
+    public class MainViewModel : ViewModelBase
     {
-        CaptureControlsViewModel = new CaptureControlsViewModel();
+        public CaptureControlsViewModel CaptureControlsViewModel { get; }
+
+        public MainViewModel(ApplicationStateService applicationStateService, string[] arguments)
+        {
+            CaptureControlsViewModel = new CaptureControlsViewModel(this);
+        }
     }
 }
+
+
