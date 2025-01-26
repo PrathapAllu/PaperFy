@@ -15,6 +15,8 @@ namespace PaperFy.Shared.AppManager
         private bool captureKeyboardEvents;
 
         private bool captureSpecialKeys = true;
+        internal int markerSize;
+        internal string markerColor;
 
         public static Settings Instance { get; private set; } = new Settings();
 

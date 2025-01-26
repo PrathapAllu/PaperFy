@@ -1,5 +1,6 @@
 using PaperFy.Shared.Interface;
 using PaperFy.Shared.Windows.Models;
+using PaperFy.Shared.Windows.Services;
 
 namespace PaperFy.Shared.Windows.Service
 {
@@ -163,16 +164,16 @@ namespace PaperFy.Shared.Windows.Service
             {
                 while (IsRunning)
                 {
-                    //long currentTimestamp = SystemService.Instance.CurrentTimestamp;
-                    //if (!IsPaused)
-                    //{
-                    //    CaptureScreens(currentTimestamp);
-                    //}
-                    //double num = Frequency.TotalMilliseconds - (double)(SystemService.Instance.CurrentTimestamp - currentTimestamp);
-                    //if (num > 0.0)
-                    //{
-                    //    Thread.Sleep((int)num);
-                    //}
+                    long currentTimestamp = SystemService.Instance.CurrentTimestamp;
+                    if (!IsPaused)
+                    {
+                        CaptureScreens(currentTimestamp);
+                    }
+                    double num = Frequency.TotalMilliseconds - (double)(SystemService.Instance.CurrentTimestamp - currentTimestamp);
+                    if (num > 0.0)
+                    {
+                        Thread.Sleep((int)num);
+                    }
                 }
             });
         }

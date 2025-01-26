@@ -1,4 +1,5 @@
 ﻿using Paperfy.Models;
+using Paperfy.Views;
 using PaperFy.Shared.AppManager;
 using PaperFy.Shared.Interface;
 using PaperFy.Shared.Windows.Services;
@@ -44,7 +45,19 @@ namespace Paperfy.ViewModels
             {
                 parent.SwitchView("predocumenting");
             });
-            StopDocumentingCommand = ReactiveCommand.Create(() => { });
+            StopDocumentingCommand = ReactiveCommand.CreateFromTask(async () => 
+            {
+                screenCaptureService.Stop();
+                
+                if (ApplicationManager.IimageProcessor.HasImages)
+                {
+                    var window = new ImageEditorWindow
+                    {
+                        DataContext = new ImageEditorViewModel()
+                    };
+                    await window.ShowDialog(Parent.MainWindow);
+                }
+            });
             PauseDocumentingCommand = ReactiveCommand.Create(() =>
             {
                 isPausedOrResume = true;

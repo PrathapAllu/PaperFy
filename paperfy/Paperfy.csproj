@@ -26,6 +26,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Views\ImageEditorWindow.axaml.cs">
+      <DependentUpon>ImageEditorWindow.axaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="Styles\ButtonStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>

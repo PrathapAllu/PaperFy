@@ -18,6 +18,8 @@ namespace PaperFy.Shared.AppManager
 
         public static IDocumenterService DocumenterService { get; internal set; }
 
+        public static IimageProcessor IimageProcessor { get; set; }
+
         static ApplicationManager()
         {
             
@@ -42,8 +44,9 @@ namespace PaperFy.Shared.AppManager
         }
 
         private static void InitializeServices()
-        {           
-            DocumenterService = new DocumenterService(ScreenCaptureService, ControlCaptureService);
+        {
+            IimageProcessor = new ImageProcessor();
+            DocumenterService = new DocumenterService(ScreenCaptureService, ControlCaptureService);           
         }
     }
 }
