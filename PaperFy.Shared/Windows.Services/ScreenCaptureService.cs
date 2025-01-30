@@ -105,6 +105,7 @@ namespace PaperFy.Shared.Windows.Service
             }
         }
 
+        //TODO: Fix stop
         public void Stop()
         {
             lock (SyncObject)
