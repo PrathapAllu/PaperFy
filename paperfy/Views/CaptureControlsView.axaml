@@ -19,11 +19,25 @@
 			<Setter Property="Background" Value="#6C63FF"/>
 		</Style>
 
+		<Style Selector="Button.primary:pointerover">
+			<Setter Property="Background" Value="{DynamicResource primaryBackColor1}"/>
+		</Style>
+		<Style Selector="Button.primary:pointerover /template/ ContentPresenter">
+			<Setter Property="Background" Value="{DynamicResource primaryBackColor1}"/>
+		</Style>
+
 		<Style Selector="Button.control">
 			<Setter Property="Background" Value="#1A1A1A"/>
 			<Setter Property="BorderBrush" Value="#333333"/>
 			<Setter Property="BorderThickness" Value="1"/>
 			<Setter Property="Height" Value="40"/>
+		</Style>
+
+		<Style Selector="Button.control:pointerover">
+			<Setter Property="Background" Value="{DynamicResource primaryBackColor1}"/>
+		</Style>
+		<Style Selector="Button.control:pointerover /template/ ContentPresenter">
+			<Setter Property="Background" Value="{DynamicResource primaryBackColor1}"/>
 		</Style>
 
 		<Style Selector="ToggleSwitch">

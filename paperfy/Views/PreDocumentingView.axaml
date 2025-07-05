@@ -6,6 +6,39 @@
              x:Class="Paperfy.Views.PreDocumentingView"
              Background="#18181B">
 
+	<UserControl.Styles>
+		<Style Selector="Button.primary">
+			<Setter Property="Background" Value="#8B5CF6"/>
+			<Setter Property="Foreground" Value="White"/>
+		</Style>
+
+		<Style Selector="Button.primary:pointerover">
+			<Setter Property="Background" Value="#F8F6F0"/>
+		</Style>
+		<Style Selector="Button.primary:pointerover /template/ ContentPresenter">
+			<Setter Property="Background" Value="#F8F6F0"/>
+		</Style>
+
+		<Style Selector="Button.outline">
+			<Setter Property="Background" Value="#27272A"/>
+			<Setter Property="BorderBrush" Value="#8B5CF6"/>
+			<Setter Property="BorderThickness" Value="2"/>
+			<Setter Property="Foreground" Value="White"/>
+		</Style>
+
+		<Style Selector="Button.outline:pointerover">
+			<Setter Property="Background" Value="#F8F6F0"/>
+		</Style>
+		<Style Selector="Button.outline:pointerover /template/ ContentPresenter">
+			<Setter Property="Background" Value="#F8F6F0"/>
+		</Style>
+
+		<Style Selector="ToggleSwitch">
+			<Setter Property="OnContent" Value=""/>
+			<Setter Property="OffContent" Value=""/>
+		</Style>
+	</UserControl.Styles>
+	
 	<StackPanel Spacing="20" Margin="20">
 		<!-- Document Name Input -->
 		<TextBox Watermark="Enter document name..."
