@@ -1,15 +1,16 @@
 <Window xmlns="https://github.com/avaloniaui"
        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
        xmlns:vm="using:Paperfy.ViewModels"
+       xmlns:converters="using:Paperfy.Converter"
        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
        mc:Ignorable="d" Width="800" Height="600"
        x:Class="Paperfy.Views.ImageEditorWindow"
        Title="Image Editor"
-	WindowStartupLocation="CenterScreen"
-		CanResize="True" 
-		Topmost="True"
-		ShowInTaskbar="True">
+       WindowStartupLocation="CenterScreen"
+       CanResize="True"
+       Topmost="True"
+       ShowInTaskbar="True">
 
 	<ScrollViewer>
 		<ItemsControl ItemsSource="{Binding Images}">
@@ -21,7 +22,8 @@
 			<ItemsControl.ItemTemplate>
 				<DataTemplate>
 					<Border Margin="10" BorderBrush="Gray" BorderThickness="1">
-						<Image Width="200" Height="200" Stretch="Uniform"/>
+						<Image MaxWidth="600" MaxHeight="400" Stretch="Uniform"
+							   Source="{Binding ., Converter={x:Static converters:ByteArrayToBitmapConverter.Instance}}"/>
 					</Border>
 				</DataTemplate>
 			</ItemsControl.ItemTemplate>
