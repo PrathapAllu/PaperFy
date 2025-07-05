@@ -46,6 +46,8 @@ public class PreDocumentingViewModel : ParentViewModel
     {
         _mainViewModel = parent;
         ImportPicturesCommand = ReactiveCommand.Create(ImportPictures);
+
+        var canStartRecording = this.WhenAnyValue(x => x.DocumentName, name => !string.IsNullOrWhiteSpace(name));
         StartRecordingCommand = ReactiveCommand.Create(() =>
         {
             LocalSettings.Instance.IsAppDocumenting = true;
@@ -53,7 +55,7 @@ public class PreDocumentingViewModel : ParentViewModel
             ApplicationManager.DocumenterService?.StartDocumenting(false);
             
             parent.SwitchView("capture");
-        });
+        }, canStartRecording);
 
         CancelRecordCommand = ReactiveCommand.Create(() =>
         {
