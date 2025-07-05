@@ -19,11 +19,25 @@
 			<Setter Property="Background" Value="#6C63FF"/>
 		</Style>
 
+		<Style Selector="Button.primary:pointerover">
+			<Setter Property="Background" Value="{DynamicResource primaryBackColor1}"/>
+		</Style>
+		<Style Selector="Button.primary:pointerover /template/ ContentPresenter">
+			<Setter Property="Background" Value="{DynamicResource primaryBackColor1}"/>
+		</Style>
+
 		<Style Selector="Button.control">
 			<Setter Property="Background" Value="#1A1A1A"/>
 			<Setter Property="BorderBrush" Value="#333333"/>
 			<Setter Property="BorderThickness" Value="1"/>
 			<Setter Property="Height" Value="40"/>
+		</Style>
+
+		<Style Selector="Button.control:pointerover">
+			<Setter Property="Background" Value="{DynamicResource primaryBackColor1}"/>
+		</Style>
+		<Style Selector="Button.control:pointerover /template/ ContentPresenter">
+			<Setter Property="Background" Value="{DynamicResource primaryBackColor1}"/>
 		</Style>
 
 		<Style Selector="ToggleSwitch">
@@ -45,6 +59,7 @@
                 Margin="0,0,0,30"
                 Classes="primary"
                 HorizontalAlignment="Stretch"
+				IsEnabled="{Binding CaptureControlsViewModel.CanCreateDocument}"
 				Command="{Binding CaptureControlsViewModel.StartDocumentingCommand}">
             <StackPanel Orientation="Horizontal" Spacing="10">
                 <Image Source="/Assets/avalonia-logo.ico"
@@ -100,15 +115,14 @@
             </Button>
         </StackPanel>
 
-        <!-- Progress Bar -->
-        <ProgressBar Grid.Row="3"
-                     Value="50"
-                     Maximum="100"
-                     Height="6"
-                     CornerRadius="3"
-                     Background="#1A1A1A"
-                     Foreground="#6C63FF"
-                     BorderBrush="#333333"
-                     BorderThickness="1"/>
+        <!-- status -->
+		<StackPanel Grid.Row="3" Orientation="Horizontal">
+			<TextBlock Text="Status: "
+		   FontSize="20"/>
+			<TextBlock Grid.Row="3"
+			   Text="Idle"
+			   FontSize="20"/>
+		</StackPanel>
+
     </Grid>
 </UserControl>

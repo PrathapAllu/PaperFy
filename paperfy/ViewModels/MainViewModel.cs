@@ -7,9 +7,11 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia;
 using Paperfy;
+using System;
 
 public class MainViewModel : ViewModelBase
 {
+    public string UserName { get; set; } = Environment.UserName;
     private object _currentView;
     public object CurrentView
     {
@@ -21,6 +23,9 @@ public class MainViewModel : ViewModelBase
     private readonly SettingsView _settingsView;
     private readonly CheckForUpdatesView _updatesView;
     private readonly AboutView _aboutView;
+    private readonly PreDocumentingView _preDocumentingView;
+
+    public PreDocumentingViewModel PreDocumentingViewModel { get; }
 
     internal IClassicDesktopStyleApplicationLifetime DesktopLifetime => Application.Current.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime;
     internal MainWindow MainWindow => DesktopLifetime?.MainWindow as MainWindow;
@@ -29,6 +34,10 @@ public class MainViewModel : ViewModelBase
 
     public MainViewModel(ApplicationStateService applicationStateService, string[] arguments)
     {
+        _preDocumentingView = new PreDocumentingView();
+        PreDocumentingViewModel = new PreDocumentingViewModel(this);
+        _preDocumentingView.DataContext = PreDocumentingViewModel;
+
         _captureView = new CaptureControlsView();
         _settingsView = new SettingsView();
         _updatesView = new CheckForUpdatesView();
@@ -40,13 +49,14 @@ public class MainViewModel : ViewModelBase
         CurrentView = _captureView;
     }
 
-    private void SwitchView(string view) => CurrentView = view switch
+    public void SwitchView(string view) => CurrentView = view switch
     {
+        "predocumenting" => _preDocumentingView,
         "capture" => _captureView,
         "settings" => _settingsView,
         "updates" => _updatesView,
         "about" => _aboutView,
-        _ => _captureView
+        _ => _preDocumentingView
     };
 
     public ICommand NavigateCommand { get; }

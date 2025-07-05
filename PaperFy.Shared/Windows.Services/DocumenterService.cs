@@ -22,6 +22,8 @@ namespace PaperFy.Shared.Windows.Services
 
         protected IControlCaptureService ControlCaptureService { get; }
 
+        public IimageProcessor IimageProcessor { get; }
+
         public bool IsIdle => throw new NotImplementedException();
 
         public bool IsRunning => throw new NotImplementedException();
@@ -168,16 +170,34 @@ namespace PaperFy.Shared.Windows.Services
             throw new NotImplementedException();
         }
 
-        public Task StopDocumenting()
+        public async Task StopDocumenting()
         {
-            throw new NotImplementedException();
+            lock (SyncObject)
+            {
+                try
+                {
+                    if (State == DocumentingState.Idle)
+                        return;
+
+                    ScreenCaptureService?.Stop();
+                    SystemService.Instance.PlatformSystemService?.StopKeyboardListener();
+                    SystemService.Instance.PlatformSystemService?.StopMouseListener();
+
+                    State = DocumentingState.Idle;
+                }
+                catch (Exception ex)
+                {
+                    State = DocumentingState.Errored;
+                    throw;
+                }
+            }
         }
 
         private void SaveScreenshotLocally(byte[] screenshot, MouseAction action)
         {
             string filename = $"screenshot_{action.EndTimestamp}.png";
             string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                "Scribe", DateTime.Now.ToString("yyyy-MM-dd"), "screenshots", filename);
+                "PaperFy", DateTime.Now.ToString("yyyy-MM-dd"), "screenshots", filename);
             Directory.CreateDirectory(Path.GetDirectoryName(path));
             File.WriteAllBytes(path, screenshot);
         }
@@ -279,7 +299,16 @@ namespace PaperFy.Shared.Windows.Services
 
             mouseAction.TargetText = ControlCaptureService?.GetLabelAtPosition(new global::PaperFy.Shared.Windows.Models.Point(args.MouseEvent.X, args.MouseEvent.Y));
 
-            SaveScreenshotLocally(array, mouseAction);
+            if (State != DocumentingState.Recording) return;
+            if (!IsValidMousePoint(args.MouseEvent.X, args.MouseEvent.Y)) return;
+
+            LastMouseEvent = args.MouseEvent;
+            var clickPoint = new Point(LastMouseEvent.X, LastMouseEvent.Y);
+
+            var (screenshot, _, _) = GetImmediateScreenshotInformation(clickPoint, LastMouseEvent.Timestamp);
+
+            ApplicationManager.IimageProcessor?.AddImage(screenshot, clickPoint);
+            //SaveScreenshotLocally(array, mouseAction);
         }
     }
 }

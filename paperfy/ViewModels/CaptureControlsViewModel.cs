@@ -1,4 +1,6 @@
-﻿using PaperFy.Shared.AppManager;
+﻿using Paperfy.Models;
+using Paperfy.Views;
+using PaperFy.Shared.AppManager;
 using PaperFy.Shared.Interface;
 using PaperFy.Shared.Windows.Services;
 using ReactiveUI;
@@ -9,7 +11,6 @@ namespace Paperfy.ViewModels
     public class CaptureControlsViewModel : ParentViewModel
     {
         private bool isRecordingAudio { get; set; }
-
         private bool isPausedOrResume;
         public bool IsPauseVisible => !isPausedOrResume;
         public bool IsResumeVisible => isPausedOrResume;
@@ -30,14 +31,33 @@ namespace Paperfy.ViewModels
 
         public ICommand ToggleAudioDocumentingCommand { get; }
 
+        public bool CanCreateDocument
+        {
+            get => !LocalSettings.Instance.IsAppDocumenting;           
+        }
 
         public CaptureControlsViewModel(MainViewModel parent) : base(parent)
         {
 
             screenCaptureService = ApplicationManager.ScreenCaptureService;
 
-            StartDocumentingCommand = ReactiveCommand.Create(StartDocumenting);
-            StopDocumentingCommand = ReactiveCommand.Create(() => { });
+            StartDocumentingCommand = ReactiveCommand.Create(() =>
+            {
+                parent.SwitchView("predocumenting");
+            });
+            StopDocumentingCommand = ReactiveCommand.CreateFromTask(async () => 
+            {
+                screenCaptureService.Stop();
+                
+                if (ApplicationManager.IimageProcessor.HasImages)
+                {
+                    var window = new ImageEditorWindow
+                    {
+                        DataContext = new ImageEditorViewModel()
+                    };
+                    await window.ShowDialog(Parent.MainWindow);
+                }
+            });
             PauseDocumentingCommand = ReactiveCommand.Create(() =>
             {
                 isPausedOrResume = true;
@@ -53,13 +73,6 @@ namespace Paperfy.ViewModels
 
             CancelDocumentingCommand = ReactiveCommand.Create(() => { });
             ToggleAudioDocumentingCommand = ReactiveCommand.Create(() => { });
-        }
-
-        public void StartDocumenting()
-        {
-            base.Parent.Minimize();
-            ApplicationManager.DocumenterService?.StartDocumenting(false);
-            
         }
     }
 }

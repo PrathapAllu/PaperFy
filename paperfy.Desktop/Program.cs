@@ -17,12 +17,11 @@ class Program
         try
         {
             ApplicationManager.PlatformSystemService = new WindowsSystemService();
-            var screenCapture = new WindowsScreenCaptureService();
-            ApplicationManager.ScreenCaptureService = screenCapture;
+            ApplicationManager.ScreenCaptureService = new WindowsScreenCaptureService();
             ApplicationManager.ControlCaptureService = new WindowsControlCaptureService();
             ApplicationManager.Run(BuildAvaloniaApp, args);
         }
-        catch (Exception exception)
+        catch (Exception ex)
         {
             
         }

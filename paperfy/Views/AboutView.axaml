@@ -4,5 +4,59 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Paperfy.Views.AboutView">
-  About View
+
+	<Panel Background="#000000">
+		<!-- Background Circles -->
+		<Ellipse Width="120" Height="120" Fill="#8B5CF6" Opacity="0.1"
+                 HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-20"/>
+		<Ellipse Width="150" Height="150" Fill="#8B5CF6" Opacity="0.1"
+                 HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="-30"/>
+
+		<StackPanel Spacing="15" MaxWidth="300" Margin="0,30">
+			<!-- Logo -->
+			<Border Width="70" Height="70" CornerRadius="35"
+                    Background="#27272A" BorderBrush="#18181B" BorderThickness="1"
+                    HorizontalAlignment="Center">
+				<TextBlock Text="P" FontSize="32" FontWeight="Bold"
+                         Foreground="#8B5CF6" HorizontalAlignment="Center"
+                         VerticalAlignment="Center"/>
+			</Border>
+
+			<!-- App Info -->
+			<StackPanel Spacing="3" HorizontalAlignment="Center">
+				<TextBlock Text="PaperFy" FontSize="22" FontWeight="SemiBold"
+                         Foreground="White" HorizontalAlignment="Center"/>
+				<TextBlock Text="Desktop Version 1.0.0" FontSize="13" Foreground="#71717A"
+                         HorizontalAlignment="Center"/>
+			</StackPanel>
+
+			<!-- Links -->
+			<Button Classes="link" HorizontalAlignment="Stretch" Height="45" Margin="0,10,0,0">
+				<StackPanel Orientation="Horizontal" Spacing="10">
+					<Ellipse Width="25" Height="25" Fill="#8B5CF6" Opacity="0.2"/>
+					<TextBlock Text="FAQ's" VerticalAlignment="Center" FontSize="14"/>
+				</StackPanel>
+			</Button>
+
+			<!-- Copyright -->
+			<StackPanel Spacing="8" Margin="0,15,0,0">
+				<Border Height="1" Background="#71717A" Opacity="0.3"/>
+				<TextBlock Text="© 2025 PaperFy. All rights reserved." FontSize="11"
+                         Foreground="#71717A" HorizontalAlignment="Center"/>
+			</StackPanel>
+		</StackPanel>
+	</Panel>
+
+	<UserControl.Styles>
+		<Style Selector="Button.link">
+			<Setter Property="Background" Value="#27272A"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="CornerRadius" Value="8"/>
+			<Setter Property="Padding" Value="15,8"/>
+			<Setter Property="Opacity" Value="0.8"/>
+		</Style>
+		<Style Selector="Button.link:pointerover">
+			<Setter Property="Opacity" Value="1"/>
+		</Style>
+	</UserControl.Styles>
 </UserControl>

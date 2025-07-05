@@ -1,0 +1,30 @@
+<Window xmlns="https://github.com/avaloniaui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+       xmlns:vm="using:Paperfy.ViewModels"
+       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+       mc:Ignorable="d" Width="800" Height="600"
+       x:Class="Paperfy.Views.ImageEditorWindow"
+       Title="Image Editor"
+	WindowStartupLocation="CenterScreen"
+		CanResize="True" 
+		Topmost="True"
+		ShowInTaskbar="True">
+
+	<ScrollViewer>
+		<ItemsControl ItemsSource="{Binding Images}">
+			<ItemsControl.ItemsPanel>
+				<ItemsPanelTemplate>
+					<WrapPanel />
+				</ItemsPanelTemplate>
+			</ItemsControl.ItemsPanel>
+			<ItemsControl.ItemTemplate>
+				<DataTemplate>
+					<Border Margin="10" BorderBrush="Gray" BorderThickness="1">
+						<Image Width="200" Height="200" Stretch="Uniform"/>
+					</Border>
+				</DataTemplate>
+			</ItemsControl.ItemTemplate>
+		</ItemsControl>
+	</ScrollViewer>
+</Window>
