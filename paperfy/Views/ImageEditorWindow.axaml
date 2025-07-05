@@ -4,7 +4,7 @@
        xmlns:converters="using:Paperfy.Converter"
        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-       mc:Ignorable="d" Width="800" Height="600"
+       mc:Ignorable="d" Width="1200" Height="800"
        x:Class="Paperfy.Views.ImageEditorWindow"
        Title="Image Editor"
        WindowStartupLocation="CenterScreen"
@@ -12,21 +12,40 @@
        Topmost="True"
        ShowInTaskbar="True">
 
-	<ScrollViewer>
-		<ItemsControl ItemsSource="{Binding Images}">
-			<ItemsControl.ItemsPanel>
-				<ItemsPanelTemplate>
-					<WrapPanel />
-				</ItemsPanelTemplate>
-			</ItemsControl.ItemsPanel>
-			<ItemsControl.ItemTemplate>
-				<DataTemplate>
-					<Border Margin="10" BorderBrush="Gray" BorderThickness="1">
-						<Image MaxWidth="600" MaxHeight="400" Stretch="Uniform"
-							   Source="{Binding ., Converter={x:Static converters:ByteArrayToBitmapConverter.Instance}}"/>
-					</Border>
-				</DataTemplate>
-			</ItemsControl.ItemTemplate>
-		</ItemsControl>
-	</ScrollViewer>
+	<Grid RowDefinitions="Auto,*">
+		<!-- Top row with button -->
+		<Button Grid.Row="0"
+                Content="Export"
+                HorizontalAlignment="Right"
+                Margin="10"
+                Width="100"
+                Height="35"/>
+
+		<!-- Bottom row with two columns -->
+		<Grid Grid.Row="1" ColumnDefinitions="*,2*">
+			<!-- Left column - Image list -->
+			<ScrollViewer Grid.Column="0" Margin="10">
+				<ItemsControl ItemsSource="{Binding Images}">
+					<ItemsControl.ItemTemplate>
+						<DataTemplate>
+							<Button Margin="5" BorderBrush="Gray" BorderThickness="1"
+									Command="{Binding $parent[ItemsControl].DataContext.SelectImageCommand}"
+									CommandParameter="{Binding}"
+									Background="Transparent"
+									Padding="0">
+								<Image Width="150" Height="100" Stretch="Uniform"
+									   Source="{Binding ., Converter={x:Static converters:ByteArrayToBitmapConverter.Instance}}"/>
+							</Button>
+						</DataTemplate>
+					</ItemsControl.ItemTemplate>
+				</ItemsControl>
+			</ScrollViewer>
+
+			<!-- Right column - Selected image -->
+			<Border Grid.Column="1" Margin="10" BorderBrush="Gray" BorderThickness="2">
+				<Image Stretch="Uniform"
+                       Source="{Binding SelectedImage, Converter={x:Static converters:ByteArrayToBitmapConverter.Instance}}"/>
+			</Border>
+		</Grid>
+	</Grid>
 </Window>
