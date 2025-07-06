@@ -13,13 +13,18 @@
        ShowInTaskbar="True">
 
 	<Grid RowDefinitions="Auto,*">
-		<!-- Top row with button -->
-		<Button Grid.Row="0"
-                Content="Export"
-                HorizontalAlignment="Right"
-                Margin="10"
-                Width="100"
-                Height="35"/>
+		<!-- Top row with dropdown -->
+		<ComboBox Grid.Row="0"
+				  HorizontalAlignment="Right"
+				  Margin="10"
+				  Width="200"
+				  Height="35"
+				  PlaceholderText="Export Options"
+				  SelectionChanged="ExportComboBox_SelectionChanged"
+				  x:Name="ExportComboBox">
+			<ComboBoxItem Content="Export Single Image" Tag="Single"/>
+			<ComboBoxItem Content="Export to Document" Tag="Document"/>
+		</ComboBox>
 
 		<!-- Bottom row with two columns -->
 		<Grid Grid.Row="1" ColumnDefinitions="*,2*">
