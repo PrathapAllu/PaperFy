@@ -1,15 +1,17 @@
 ﻿using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Platform.Storage;
+using Paperfy.Services;
 using PaperFy.Shared.AppManager;
 using PdfSharp.Drawing;
+using PdfSharp.Fonts;
 using PdfSharp.Pdf;
 using ReactiveUI;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
-using System.Collections.Generic;
 
 namespace Paperfy.ViewModels
 {
@@ -86,6 +88,8 @@ namespace Paperfy.ViewModels
 
         public ImageEditorViewModel()
         {
+            GlobalFontSettings.FontResolver = new SimpleFontResolver();
+
             LoadImages();
 
             if (Images?.Any() == true)
@@ -214,9 +218,8 @@ namespace Paperfy.ViewModels
                         // Draw the image
                         gfx.DrawImage(image, x, y, scaledWidth, scaledHeight);
 
-                        // Add annotation text if exists
                         if (_imageAnnotations.TryGetValue(imageBytes, out var annotation) &&
-                            !string.IsNullOrWhiteSpace(annotation))
+                                                    !string.IsNullOrWhiteSpace(annotation))
                         {
                             var font = new XFont("Arial", 11);
                             var textY = y + scaledHeight + 20;
