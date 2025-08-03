@@ -8,9 +8,9 @@ namespace PaperFy.Shared.Interface
 
         bool IsRunning { get; }
 
-        byte[] GetImmediateScreenshot(Point point, long timestamp);
+        byte[] GetImmediateScreenshot(Point point, long timestamp, bool excludeTaskbar = false);
 
-        byte[] GetPriorScreenshot(Point point, long timestamp);
+        byte[] GetPriorScreenshot(Point point, long timestamp, bool excludeTaskbar = false);
 
         Screen GetScreen(Point point);
 

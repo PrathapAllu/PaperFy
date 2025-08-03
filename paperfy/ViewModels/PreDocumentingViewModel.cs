@@ -1,5 +1,7 @@
 ﻿using Paperfy.Models;
 using PaperFy.Shared.AppManager;
+using PaperFy.Shared.Windows.Events;
+using PaperFy.Shared.Windows.Services;
 using ReactiveUI;
 using System.Windows.Input;
 
@@ -28,7 +30,13 @@ public class PreDocumentingViewModel : ParentViewModel
     public bool EnableDontIncludeTaskBar
     {
         get => _enableDontIncludeTaskBar;
-        set => this.RaiseAndSetIfChanged(ref _enableDontIncludeTaskBar, value);
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _enableDontIncludeTaskBar, value);
+            // Sync with both LocalSettings and Settings
+            LocalSettings.Instance.IsDontIncludeTaskBar = value;
+            Settings.Instance.DontIncludeTaskBar = value;
+        }
     }
 
     public bool EnableShiftClick
@@ -45,6 +53,12 @@ public class PreDocumentingViewModel : ParentViewModel
     public PreDocumentingViewModel(MainViewModel parent) : base(parent)
     {
         _mainViewModel = parent;
+
+        _enableDontIncludeTaskBar = Settings.Instance.DontIncludeTaskBar;
+        LocalSettings.Instance.IsDontIncludeTaskBar = Settings.Instance.DontIncludeTaskBar;
+
+        EventAggregator.Instance.Subscribe<SettingChangedEvent>(OnSettingChanged);
+
         ImportPicturesCommand = ReactiveCommand.Create(ImportPictures);
 
         var canStartRecording = this.WhenAnyValue(x => x.DocumentName, name => !string.IsNullOrWhiteSpace(name));
@@ -61,6 +75,20 @@ public class PreDocumentingViewModel : ParentViewModel
         {
             parent.SwitchView("capture");
         });
+    }
+
+    private void OnSettingChanged(SettingChangedEvent settingChanged)
+    {
+        if (settingChanged.Name == "DontIncludeTaskBar")
+        {
+            var newValue = (bool)settingChanged.Value;
+            if (_enableDontIncludeTaskBar != newValue)
+            {
+                _enableDontIncludeTaskBar = newValue;
+                this.RaisePropertyChanged(nameof(EnableDontIncludeTaskBar));
+                LocalSettings.Instance.IsDontIncludeTaskBar = newValue;
+            }
+        }
     }
 
     private void ImportPictures()

@@ -7,7 +7,7 @@ namespace PaperFy.Shared.AppManager
     public static class ApplicationManager
     {
         public static IAudioCaptureService AudioCaptureService { get; set; }
-        
+
         public static IControlCaptureService ControlCaptureService { get; set; }
 
         public static IDialogService DialogService { get; set; }
@@ -22,7 +22,7 @@ namespace PaperFy.Shared.AppManager
 
         static ApplicationManager()
         {
-            
+
         }
 
         public static void Run(Func<AppBuilder> applicationBuilder, string[] arguments)
@@ -38,7 +38,7 @@ namespace PaperFy.Shared.AppManager
             }
             catch (Exception exception)
             {
-                
+
             }
 
         }
@@ -46,7 +46,7 @@ namespace PaperFy.Shared.AppManager
         private static void InitializeServices()
         {
             IimageProcessor = new ImageProcessor();
-            DocumenterService = new DocumenterService(ScreenCaptureService, ControlCaptureService);           
+            DocumenterService = new DocumenterService(ScreenCaptureService, ControlCaptureService);
         }
     }
 }

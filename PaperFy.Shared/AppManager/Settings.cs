@@ -11,12 +11,12 @@ namespace PaperFy.Shared.AppManager
         private static bool isLoading = false;
 
         private bool captureLabels = true;
-
         private bool captureKeyboardEvents;
-
         private bool captureSpecialKeys = true;
-        internal int markerSize;
-        internal string markerColor;
+        private bool dontIncludeTaskBar = false; // Add taskbar exclusion setting
+
+        internal int markerSize = 10;
+        internal string markerColor = "#FF0000";
 
         public static Settings Instance { get; private set; } = new Settings();
 
@@ -74,7 +74,67 @@ namespace PaperFy.Shared.AppManager
                     captureSpecialKeys = value;
                     if (!isLoading)
                     {
-                        EventAggregator.Instance.Publish(new SettingChangedEvent("CaptureSpecialKeys", CaptureSpecialKeys));                      
+                        EventAggregator.Instance.Publish(new SettingChangedEvent("CaptureSpecialKeys", CaptureSpecialKeys));
+                    }
+                }
+            }
+        }
+
+        [JsonPropertyName("dont_include_taskbar")]
+        public bool DontIncludeTaskBar
+        {
+            get
+            {
+                return dontIncludeTaskBar;
+            }
+            set
+            {
+                if (dontIncludeTaskBar != value)
+                {
+                    dontIncludeTaskBar = value;
+                    if (!isLoading)
+                    {
+                        EventAggregator.Instance.Publish(new SettingChangedEvent("DontIncludeTaskBar", DontIncludeTaskBar));
+                    }
+                }
+            }
+        }
+
+        [JsonPropertyName("marker_size")]
+        public int MarkerSize
+        {
+            get
+            {
+                return markerSize;
+            }
+            set
+            {
+                if (markerSize != value)
+                {
+                    markerSize = value;
+                    if (!isLoading)
+                    {
+                        EventAggregator.Instance.Publish(new SettingChangedEvent("MarkerSize", MarkerSize));
+                    }
+                }
+            }
+        }
+
+        [JsonPropertyName("marker_color")]
+        public string MarkerColor
+        {
+            get
+            {
+                return markerColor;
+            }
+            set
+            {
+                if (markerColor != value)
+                {
+                    markerColor = value;
+                    if (!isLoading)
+                    {
+                        EventAggregator.Instance.Publish(new SettingChangedEvent("MarkerColor", MarkerColor));
                     }
                 }
             }
@@ -86,10 +146,5 @@ namespace PaperFy.Shared.AppManager
         private Settings()
         {
         }
-
-
-
-
-
     }
 }

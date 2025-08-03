@@ -1,13 +1,13 @@
-﻿using PaperFy.Shared.Windows.Service;
-using Paperfy.ViewModels;
-using Paperfy.Views;
-using ReactiveUI;
-using System.Windows.Input;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia;
-using Paperfy;
+using Paperfy.ViewModels;
+using Paperfy.ViewModels.Paperfy.ViewModels;
+using Paperfy.Views;
+using PaperFy.Shared.Windows.Service;
+using ReactiveUI;
 using System;
+using System.Windows.Input;
 
 public class MainViewModel : ViewModelBase
 {
@@ -34,6 +34,9 @@ public class MainViewModel : ViewModelBase
 
     public MainViewModel(ApplicationStateService applicationStateService, string[] arguments)
     {
+        _settingsView = new SettingsView();
+        _settingsView.DataContext = new SettingsViewModel();
+
         _preDocumentingView = new PreDocumentingView();
         PreDocumentingViewModel = new PreDocumentingViewModel(this);
         _preDocumentingView.DataContext = PreDocumentingViewModel;

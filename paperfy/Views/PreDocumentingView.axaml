@@ -69,14 +69,14 @@
 							 OnContent=""
 							 OffContent=""/>
 
-				<!-- Keyboard Input -->
+				<!-- EnableDontIncludeTaskBar Input -->
 				<TextBlock Text="Don't Include TaskBar"
 						  Grid.Row="1"
 						  Foreground="White"
 						  VerticalAlignment="Center"/>
 				<ToggleSwitch Grid.Row="1"
 							 Grid.Column="1"
-							 IsChecked="{Binding EnableKeyboard}"
+						 IsChecked="{Binding EnableDontIncludeTaskBar}"
 							 OnContent=""
 							 OffContent=""/>
 

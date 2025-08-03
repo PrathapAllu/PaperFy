@@ -1,3 +1,4 @@
+using PaperFy.Shared.AppManager;
 using PaperFy.Shared.Interface;
 using PaperFy.Shared.Windows.Models;
 using PaperFy.Shared.Windows.Services;
@@ -25,12 +26,12 @@ namespace PaperFy.Shared.Windows.Service
             return Screen.FromPoint(point);
         }
 
-        public byte[] GetImmediateScreenshot(Point point, long timestamp)
+        public byte[] GetImmediateScreenshot(Point point, long timestamp, bool excludeTaskbar = false)
         {
             Screen screen = Screen.FromPoint(point);
             lock (SyncObject)
             {
-                TImage val = CaptureScreen(screen);
+                TImage val = CaptureScreen(screen, excludeTaskbar);
                 if (ScreenBuffer.ContainsKey(screen))
                 {
                     ScreenBuffer[screen].Enqueue((timestamp, val));
@@ -39,7 +40,7 @@ namespace PaperFy.Shared.Windows.Service
             }
         }
 
-        public byte[] GetPriorScreenshot(Point point, long timestamp)
+        public byte[] GetPriorScreenshot(Point point, long timestamp, bool excludeTaskbar = false)
         {
             Screen screen = Screen.FromPoint(point);
             lock (SyncObject)
@@ -60,12 +61,12 @@ namespace PaperFy.Shared.Windows.Service
                     }
                     catch (Exception ex)
                     {
-                        return EncodeNativeImage(CaptureScreen(screen));
+                        return EncodeNativeImage(CaptureScreen(screen, excludeTaskbar));
                     }
                 }
                 try
                 {
-                    return EncodeNativeImage(CaptureScreen(screen));
+                    return EncodeNativeImage(CaptureScreen(screen, excludeTaskbar));
                 }
                 catch (Exception ex2)
                 {
@@ -135,7 +136,7 @@ namespace PaperFy.Shared.Windows.Service
         {
             foreach (Screen item2 in new List<Screen>(Screen.Screens))
             {
-                TImage item = CaptureScreen(item2);
+                TImage item = CaptureScreen(item2, Settings.Instance.DontIncludeTaskBar);
                 lock (SyncObject)
                 {
                     if (!IsRunning)
@@ -155,7 +156,7 @@ namespace PaperFy.Shared.Windows.Service
             }
         }
 
-        protected abstract TImage CaptureScreen(Screen screen);
+        protected abstract TImage CaptureScreen(Screen screen, bool excludeTaskbar = false);
 
         protected abstract byte[] EncodeNativeImage(TImage nativeImage);
 

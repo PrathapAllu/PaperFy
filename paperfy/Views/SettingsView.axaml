@@ -4,5 +4,20 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Paperfy.Views.SettingsView">
-  Settings view
+
+	<StackPanel Margin="20" Spacing="15">
+		<TextBlock Text="Settings" FontSize="24" FontWeight="Bold" Foreground="White"/>
+
+		<Border Background="#27272A" CornerRadius="12" Padding="20">
+			<Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto">
+				<TextBlock Text="Don't Include Taskbar in Screenshots"
+                          Foreground="White"
+                          VerticalAlignment="Center"/>
+				<ToggleSwitch Grid.Column="1"
+                             IsChecked="{Binding DontIncludeTaskBar}"
+                             OnContent=""
+                             OffContent=""/>
+			</Grid>
+		</Border>
+	</StackPanel>
 </UserControl>
