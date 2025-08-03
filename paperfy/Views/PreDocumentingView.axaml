@@ -45,7 +45,7 @@
                  Height="50"
                  CornerRadius="12"
                  Background="#27272A"
-                 Foreground="White"
+                 Foreground="Black"
                  BorderThickness="1"
                  BorderBrush="#3F3F46"
                  Padding="15,0"

@@ -1,30 +1,215 @@
 <Window xmlns="https://github.com/avaloniaui"
        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
        xmlns:vm="using:Paperfy.ViewModels"
+       xmlns:converters="using:Paperfy.Converter"
        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-       mc:Ignorable="d" Width="800" Height="600"
+       mc:Ignorable="d" Width="1200" Height="800"
        x:Class="Paperfy.Views.ImageEditorWindow"
        Title="Image Editor"
-	WindowStartupLocation="CenterScreen"
-		CanResize="True" 
-		Topmost="True"
-		ShowInTaskbar="True">
+       WindowStartupLocation="CenterScreen"
+       CanResize="True"
+       Topmost="True"
+       ShowInTaskbar="True"
+       Background="#1A1A1A">
 
-	<ScrollViewer>
-		<ItemsControl ItemsSource="{Binding Images}">
-			<ItemsControl.ItemsPanel>
-				<ItemsPanelTemplate>
-					<WrapPanel />
-				</ItemsPanelTemplate>
-			</ItemsControl.ItemsPanel>
-			<ItemsControl.ItemTemplate>
-				<DataTemplate>
-					<Border Margin="10" BorderBrush="Gray" BorderThickness="1">
-						<Image Width="200" Height="200" Stretch="Uniform"/>
-					</Border>
-				</DataTemplate>
-			</ItemsControl.ItemTemplate>
-		</ItemsControl>
-	</ScrollViewer>
+	<Window.Styles>
+		<Style Selector="Button.export-btn">
+			<Setter Property="Background" Value="#8B5CF6"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="CornerRadius" Value="8"/>
+			<Setter Property="Padding" Value="15,8"/>
+			<Setter Property="FontWeight" Value="SemiBold"/>
+		</Style>
+		<Style Selector="Button.export-btn:pointerover">
+			<Setter Property="Background" Value="#7C3AED"/>
+		</Style>
+
+		<Style Selector="Button.thumbnail">
+			<Setter Property="Background" Value="Transparent"/>
+			<Setter Property="BorderBrush" Value="#333333"/>
+			<Setter Property="BorderThickness" Value="2"/>
+			<Setter Property="CornerRadius" Value="8"/>
+			<Setter Property="Padding" Value="4"/>
+			<Setter Property="Margin" Value="0,0,0,8"/>
+		</Style>
+		<Style Selector="Button.thumbnail:pointerover">
+			<Setter Property="BorderBrush" Value="#8B5CF6"/>
+		</Style>
+		<Style Selector="Button.thumbnail.selected">
+			<Setter Property="BorderBrush" Value="#8B5CF6"/>
+			<Setter Property="BorderThickness" Value="3"/>
+		</Style>
+
+		<Style Selector="TextBox.annotation">
+			<Setter Property="Background" Value="#27272A"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="BorderBrush" Value="#3F3F46"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="CornerRadius" Value="8"/>
+			<Setter Property="Padding" Value="12"/>
+			<Setter Property="FontSize" Value="14"/>
+		</Style>
+		<Style Selector="TextBox.annotation:focus">
+			<Setter Property="BorderBrush" Value="#8B5CF6"/>
+			<Setter Property="Background" Value="#27272A"/>
+			<Setter Property="Foreground" Value="Black"/>
+		</Style>
+	</Window.Styles>
+
+	<Grid Background="#1A1A1A">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+
+		<!-- Header with Export Options -->
+		<Border Grid.Row="0" Background="#27272A" Padding="20,15">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="Auto"/>
+				</Grid.ColumnDefinitions>
+
+				<StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="15">
+					<TextBlock Text="Image Editor"
+							   FontSize="18"
+							   FontWeight="SemiBold"
+							   Foreground="White"
+							   VerticalAlignment="Center"/>
+					<TextBlock Text="{Binding Images.Count}"
+							   FontSize="14"
+							   Foreground="#A1A1AA"
+							   VerticalAlignment="Center"/>
+				</StackPanel>
+
+				<StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10">
+					<Button Classes="export-btn"
+							Content="Export Single Image"
+							Command="{Binding ExportSingleImageCommand}"/>
+					<Button Classes="export-btn"
+							Content="Export to PDF"
+							Command="{Binding ExportToDocumentCommand}"/>
+				</StackPanel>
+			</Grid>
+		</Border>
+
+		<!-- Main Content -->
+		<Grid Grid.Row="1" Margin="20">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="280"/>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+
+			<!-- Left Panel - Image Thumbnails -->
+			<Border Grid.Column="0"
+					Background="#27272A"
+					CornerRadius="12"
+					Padding="15">
+				<Grid>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="*"/>
+					</Grid.RowDefinitions>
+
+					<TextBlock Grid.Row="0"
+							   Text="Captured Images"
+							   FontSize="14"
+							   FontWeight="SemiBold"
+							   Foreground="White"
+							   Margin="0,0,0,15"/>
+
+					<ScrollViewer Grid.Row="1"
+								  VerticalScrollBarVisibility="Auto"
+								  HorizontalScrollBarVisibility="Disabled">
+						<ItemsControl ItemsSource="{Binding Images}">
+							<ItemsControl.ItemTemplate>
+								<DataTemplate>
+									<Button Classes="thumbnail"
+											Command="{Binding $parent[ItemsControl].DataContext.SelectImageCommand}"
+											CommandParameter="{Binding}"
+											HorizontalAlignment="Stretch">
+										<Image Width="220" Height="140"
+											   Source="{Binding ., Converter={x:Static converters:ByteArrayToBitmapConverter.Instance}}"/>
+									</Button>
+								</DataTemplate>
+							</ItemsControl.ItemTemplate>
+						</ItemsControl>
+					</ScrollViewer>
+				</Grid>
+			</Border>
+
+			<!-- Right Panel - Selected Image and Annotation -->
+			<Grid Grid.Column="1" Margin="20,0,0,0">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="*"/>
+					<RowDefinition Height="Auto"/>
+				</Grid.RowDefinitions>
+
+				<!-- Selected Image Display -->
+				<Border Grid.Row="0"
+						Background="#27272A"
+						CornerRadius="12"
+						Padding="15"
+						Margin="0,0,0,15">
+					<Image Stretch="Uniform"
+						   Source="{Binding SelectedImage, Converter={x:Static converters:ByteArrayToBitmapConverter.Instance}}"/>
+				</Border>
+
+				<!-- Annotation Text Box -->
+				<Border Grid.Row="1"
+						Background="#27272A"
+						CornerRadius="12"
+						Padding="15">
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition Height="Auto"/>
+						</Grid.RowDefinitions>
+
+						<TextBlock Grid.Row="0"
+								   Text="Add Description (will appear below image in PDF)"
+								   FontSize="14"
+								   FontWeight="SemiBold"
+								   Foreground="White"
+								   Margin="0,0,0,10"/>
+
+						<TextBox Grid.Row="1"
+								 Classes="annotation"
+								 Height="80"
+								 AcceptsReturn="True"
+								 TextWrapping="Wrap"
+								 VerticalContentAlignment="Top"
+								 Watermark="Enter description for this image..."
+								 Text="{Binding SelectedImageAnnotation}"/>
+					</Grid>
+				</Border>
+			</Grid>
+		</Grid>
+
+		<!-- Footer Status -->
+		<Border Grid.Row="2"
+				Background="#27272A"
+				Padding="20,10">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="Auto"/>
+				</Grid.ColumnDefinitions>
+
+				<TextBlock Grid.Column="0"
+						   Text="{Binding StatusMessage, FallbackValue='Ready to export'}"
+						   FontSize="12"
+						   Foreground="#71717A"
+						   VerticalAlignment="Center"/>
+
+				<TextBlock Grid.Column="1"
+						   Text="{Binding SelectedImageStatusText, FallbackValue='No image selected'}"
+						   FontSize="12"
+						   Foreground="#8B5CF6"
+						   VerticalAlignment="Center"/>
+			</Grid>
+		</Border>
+	</Grid>
 </Window>

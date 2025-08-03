@@ -19,6 +19,7 @@
     <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.3.2" />
     <PackageReference Include="FluentIcons.Common" Version="1.1.303" />
     <PackageReference Include="Material.Icons.Avalonia" Version="2.4.1" />
+    <PackageReference Include="PDFsharp" Version="6.2.0" />
   </ItemGroup>
 
   <ItemGroup>
