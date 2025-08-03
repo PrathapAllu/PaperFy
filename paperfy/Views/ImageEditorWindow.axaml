@@ -128,10 +128,20 @@
 								<DataTemplate>
 									<Button Classes="thumbnail"
 											Command="{Binding $parent[ItemsControl].DataContext.SelectImageCommand}"
-											CommandParameter="{Binding}"
-											HorizontalAlignment="Stretch">
-										<Image Width="220" Height="140"
-											   Source="{Binding ., Converter={x:Static converters:ByteArrayToBitmapConverter.Instance}}"/>
+											CommandParameter="{Binding}">
+										<Grid>
+											<Image Width="220" Height="140"
+												   Source="{Binding ., Converter={x:Static converters:ByteArrayToBitmapConverter.Instance}}"/>
+											<Button Classes="delete-btn"
+													Width="20" Height="20"
+													Background="Red" Foreground="White"
+													Content="🗑" FontSize="12"
+													HorizontalAlignment="Right"
+													VerticalAlignment="Top"
+													Margin="5"
+													Click="DeleteImage_Click"
+													Tag="{Binding}"/>
+										</Grid>
 									</Button>
 								</DataTemplate>
 							</ItemsControl.ItemTemplate>

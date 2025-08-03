@@ -5,6 +5,10 @@
 
         public bool IsVoiceRecordingOn { get; set; }
 
+        public bool IsDontIncludeTaskBar { get; set; }
+
+        public bool IsShiftClickCapture { get; set; }
+
         public static LocalSettings Instance { get; private set; } = new LocalSettings();
 
         public string markerColor { get; set; }

@@ -55,5 +55,14 @@ namespace PaperFy.Shared.Windows.Services
         {
             capturedImages.Add((image, clickPoint));
         }
+
+        public void RemoveImage(byte[] imageToRemove)
+        {
+            var itemToRemove = capturedImages.FirstOrDefault(x => x.image.SequenceEqual(imageToRemove));
+            if (itemToRemove != default)
+            {
+                capturedImages.Remove(itemToRemove);
+            }
+        }
     }
 }

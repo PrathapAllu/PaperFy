@@ -2,7 +2,6 @@
 using Paperfy.Views;
 using PaperFy.Shared.AppManager;
 using PaperFy.Shared.Interface;
-using PaperFy.Shared.Windows.Services;
 using ReactiveUI;
 using System.Windows.Input;
 
@@ -33,7 +32,7 @@ namespace Paperfy.ViewModels
 
         public bool CanCreateDocument
         {
-            get => !LocalSettings.Instance.IsAppDocumenting;           
+            get => !LocalSettings.Instance.IsAppDocumenting;
         }
 
         public CaptureControlsViewModel(MainViewModel parent) : base(parent)
@@ -45,10 +44,12 @@ namespace Paperfy.ViewModels
             {
                 parent.SwitchView("predocumenting");
             });
-            StopDocumentingCommand = ReactiveCommand.CreateFromTask(async () => 
+            StopDocumentingCommand = ReactiveCommand.CreateFromTask(async () =>
             {
+                await ApplicationManager.DocumenterService?.StopDocumenting();
+
                 screenCaptureService.Stop();
-                
+
                 if (ApplicationManager.IimageProcessor.HasImages)
                 {
                     var window = new ImageEditorWindow

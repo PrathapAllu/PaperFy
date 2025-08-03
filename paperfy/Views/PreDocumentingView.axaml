@@ -70,7 +70,7 @@
 							 OffContent=""/>
 
 				<!-- Keyboard Input -->
-				<TextBlock Text="Capture Keyboard Input"
+				<TextBlock Text="Don't Include TaskBar"
 						  Grid.Row="1"
 						  Foreground="White"
 						  VerticalAlignment="Center"/>

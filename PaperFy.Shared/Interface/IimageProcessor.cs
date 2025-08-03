@@ -8,5 +8,6 @@ namespace PaperFy.Shared.Interface
         void ClearImages();
         bool HasImages { get; }
         IEnumerable<(byte[] image, Point clickPoint)> GetMarkedImages();
+        void RemoveImage(byte[] image);
     }
 }
