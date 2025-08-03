@@ -10,7 +10,7 @@ public class PreDocumentingViewModel : ParentViewModel
     private readonly MainViewModel _mainViewModel;
     private string _documentName = string.Empty;
     private bool _enableVoice;
-    private bool _enableKeyboard;
+    private bool _enableDontIncludeTaskBar;
     private bool _enableShiftClick;
 
     public string DocumentName
@@ -25,10 +25,10 @@ public class PreDocumentingViewModel : ParentViewModel
         set => this.RaiseAndSetIfChanged(ref _enableVoice, value);
     }
 
-    public bool EnableKeyboard
+    public bool EnableDontIncludeTaskBar
     {
-        get => _enableKeyboard;
-        set => this.RaiseAndSetIfChanged(ref _enableKeyboard, value);
+        get => _enableDontIncludeTaskBar;
+        set => this.RaiseAndSetIfChanged(ref _enableDontIncludeTaskBar, value);
     }
 
     public bool EnableShiftClick
@@ -53,7 +53,7 @@ public class PreDocumentingViewModel : ParentViewModel
             LocalSettings.Instance.IsAppDocumenting = true;
             base.Parent.Minimize();
             ApplicationManager.DocumenterService?.StartDocumenting(false);
-            
+
             parent.SwitchView("capture");
         }, canStartRecording);
 
