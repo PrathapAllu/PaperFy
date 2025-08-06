@@ -13,10 +13,33 @@ namespace PaperFy.Shared.AppManager
         private bool captureLabels = true;
         private bool captureKeyboardEvents;
         private bool captureSpecialKeys = true;
-        private bool dontIncludeTaskBar = false; // Add taskbar exclusion setting
+        private bool dontIncludeTaskBar = false;
 
         internal int markerSize = 10;
         internal string markerColor = "#FF0000";
+
+        private int imagesPerPage = 2;
+
+        [JsonPropertyName("images_per_page")]
+        public int ImagesPerPage
+        {
+            get
+            {
+                return imagesPerPage;
+            }
+            set
+            {
+                var clampedValue = Math.Max(1, Math.Min(3, value));
+                if (imagesPerPage != clampedValue)
+                {
+                    imagesPerPage = clampedValue;
+                    if (!isLoading)
+                    {
+                        EventAggregator.Instance.Publish(new SettingChangedEvent("ImagesPerPage", ImagesPerPage));
+                    }
+                }
+            }
+        }
 
         public static Settings Instance { get; private set; } = new Settings();
 

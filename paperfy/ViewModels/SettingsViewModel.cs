@@ -21,6 +21,16 @@ namespace Paperfy.ViewModels
                 }
             }
 
+            public int ImagesPerPage
+            {
+                get => Settings.Instance.ImagesPerPage;
+                set
+                {
+                    Settings.Instance.ImagesPerPage = value;
+                    this.RaisePropertyChanged();
+                }
+            }
+
             public SettingsViewModel()
             {
                 // Initialize from Settings
@@ -35,6 +45,10 @@ namespace Paperfy.ViewModels
                 if (settingChanged.Name == "DontIncludeTaskBar")
                 {
                     this.RaisePropertyChanged(nameof(DontIncludeTaskBar));
+                }
+                else if (settingChanged.Name == "ImagesPerPage")
+                {
+                    this.RaisePropertyChanged(nameof(ImagesPerPage));
                 }
             }
         }

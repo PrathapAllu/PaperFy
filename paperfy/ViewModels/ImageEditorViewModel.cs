@@ -176,11 +176,11 @@ namespace Paperfy.ViewModels
                 {
                     Title = "Export to PDF Document",
                     DefaultExtension = "pdf",
-                    SuggestedFileName = $"{_documentName}_image.png",
+                    SuggestedFileName = $"{_documentName}.pdf",
                     FileTypeChoices = new[]
                     {
-                        new FilePickerFileType("PDF Document") { Patterns = new[] { "*.pdf" } }
-                    }
+                new FilePickerFileType("PDF Document") { Patterns = new[] { "*.pdf" } }
+            }
                 });
 
                 if (file != null)
@@ -188,47 +188,49 @@ namespace Paperfy.ViewModels
                     var document = new PdfDocument();
                     document.Info.Title = "Exported Images";
 
-                    foreach (var imageBytes in Images)
+                    var imagesPerPage = Settings.Instance.ImagesPerPage;
+                    var imageList = Images.ToList();
+
+                    for (int i = 0; i < imageList.Count; i += imagesPerPage)
                     {
                         var page = document.AddPage();
                         var gfx = XGraphics.FromPdfPage(page);
 
-                        // Image dimensions and positioning
-                        using var imageStream = new MemoryStream(imageBytes);
-                        var image = XImage.FromStream(imageStream);
-
                         var pageWidth = page.Width;
                         var pageHeight = page.Height;
                         var margin = 50;
-                        var bottomMargin = 100; // Extra space for text
 
-                        var availableHeight = pageHeight - margin - bottomMargin;
-                        var availableWidth = pageWidth - (2 * margin);
+                        var imagesToProcess = imageList.Skip(i).Take(imagesPerPage).ToList();
+                        var imageHeight = (pageHeight - (2 * margin) - ((imagesToProcess.Count - 1) * 20)) / imagesToProcess.Count;
 
-                        var imageWidth = image.PixelWidth;
-                        var imageHeight = image.PixelHeight;
-
-                        var scaleX = availableWidth / imageWidth;
-                        var scaleY = availableHeight / imageHeight;
-                        var scale = Math.Min(scaleX, scaleY);
-
-                        var scaledWidth = imageWidth * scale;
-                        var scaledHeight = imageHeight * scale;
-
-                        var x = (pageWidth - scaledWidth) / 2;
-                        var y = margin;
-
-                        // Draw the image
-                        gfx.DrawImage(image, x, y, scaledWidth, scaledHeight);
-
-                        if (_imageAnnotations.TryGetValue(imageBytes, out var annotation) &&
-                                                    !string.IsNullOrWhiteSpace(annotation))
+                        for (int j = 0; j < imagesToProcess.Count; j++)
                         {
-                            var font = new XFont("Arial", 11);
-                            var textY = y + scaledHeight + 20;
-                            var textRect = new XRect(margin, textY, pageWidth - (2 * margin), 60);
+                            var imageBytes = imagesToProcess[j];
 
-                            gfx.DrawString(annotation, font, XBrushes.Black, textRect, XStringFormats.TopLeft);
+                            using var imageStream = new MemoryStream(imageBytes);
+                            var image = XImage.FromStream(imageStream);
+
+                            var availableWidth = pageWidth - (2 * margin);
+                            var scaleX = availableWidth / image.PixelWidth;
+                            var scaleY = imageHeight / image.PixelHeight;
+                            var scale = Math.Min(scaleX, scaleY);
+
+                            var scaledWidth = image.PixelWidth * scale;
+                            var scaledHeight = image.PixelHeight * scale;
+
+                            var x = (pageWidth - scaledWidth) / 2;
+                            var y = margin + (j * (imageHeight + 20));
+
+                            gfx.DrawImage(image, x, y, scaledWidth, scaledHeight);
+
+                            if (_imageAnnotations.TryGetValue(imageBytes, out var annotation) &&
+                                !string.IsNullOrWhiteSpace(annotation))
+                            {
+                                var font = new XFont("Arial", 10);
+                                var textY = y + scaledHeight + 5;
+                                var textRect = new XRect(margin, textY, pageWidth - (2 * margin), 15);
+                                gfx.DrawString(annotation, font, XBrushes.Black, textRect, XStringFormats.TopLeft);
+                            }
                         }
 
                         gfx.Dispose();

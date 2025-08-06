@@ -19,5 +19,32 @@
                              OffContent=""/>
 			</Grid>
 		</Border>
+
+		<Border Background="#27272A" CornerRadius="12" Padding="20">
+			<Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto">
+				<StackPanel>
+					<TextBlock Text="Images Per PDF Page"
+							  Foreground="White"
+							  VerticalAlignment="Center"/>
+					<TextBlock Text="Maximum 2 images per page allowed"
+							  Foreground="#71717A"
+							  FontSize="12"
+							  Margin="0,2,0,0"/>
+				</StackPanel>
+				<StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10">
+					<NumericUpDown Value="{Binding ImagesPerPage}"
+								  Width="60"
+								  Height="35"
+								  BorderBrush="#71717A"
+								  BorderThickness="1"
+								  CornerRadius="6"
+								  Minimum="1"
+								  Maximum="3"
+								  Increment="1"
+								  ShowButtonSpinner="False"
+								  HorizontalContentAlignment="Center"/>
+				</StackPanel>
+			</Grid>
+		</Border>
 	</StackPanel>
 </UserControl>
