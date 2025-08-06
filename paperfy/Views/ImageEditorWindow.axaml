@@ -9,7 +9,6 @@
        Title="Image Editor"
        WindowStartupLocation="CenterScreen"
        CanResize="True"
-       Topmost="True"
        ShowInTaskbar="True"
        Background="#1A1A1A">
 
