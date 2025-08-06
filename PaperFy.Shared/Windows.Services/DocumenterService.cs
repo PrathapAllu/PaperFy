@@ -1,22 +1,19 @@
-﻿using Avalonia.Controls.ApplicationLifetimes;
+﻿using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Media.TextFormatting.Unicode;
-using OpenQA.Selenium;
+using Avalonia.Controls.ApplicationLifetimes;
+using PaperFy.Shared.Actions;
+using PaperFy.Shared.AppManager;
 using PaperFy.Shared.Capture;
+using PaperFy.Shared.Common.Extensions;
 using PaperFy.Shared.Interface;
 using PaperFy.Shared.Windows.Events;
 using PaperFy.Shared.Windows.Models;
-using PaperFy.Shared.Windows.Service;
-using Avalonia;
-using PaperFy.Shared.Actions;
-using Screenshot = PaperFy.Shared.Actions.Screenshot;
 using Point = PaperFy.Shared.Windows.Models.Point;
-using PaperFy.Shared.Common.Extensions;
-using PaperFy.Shared.AppManager;
+using Screenshot = PaperFy.Shared.Actions.Screenshot;
 
 namespace PaperFy.Shared.Windows.Services
 {
-    public class DocumenterService : IDocumenterService ,IDisposable
+    public class DocumenterService : IDocumenterService, IDisposable
     {
         protected IScreenCaptureService ScreenCaptureService { get; }
 
@@ -259,7 +256,7 @@ namespace PaperFy.Shared.Windows.Services
         private (byte[], float, global::PaperFy.Shared.Windows.Models.Point) GetImmediateScreenshotInformation(global::PaperFy.Shared.Windows.Models.Point position, long timestamp)
         {
             global::PaperFy.Shared.Windows.Models.Point point = new global::PaperFy.Shared.Windows.Models.Point(position.X, position.Y);
-            byte[] item = ScreenCaptureService?.GetImmediateScreenshot(point, timestamp);
+            byte[] item = ScreenCaptureService?.GetImmediateScreenshot(point, timestamp, Settings.Instance.DontIncludeTaskBar);
             Screen screen = ScreenCaptureService?.GetScreen(point);
             return (item, screen?.Scaling ?? 1f, new global::PaperFy.Shared.Windows.Models.Point((point.X - screen?.Bounds.X).GetValueOrDefault(), (point.Y - screen?.Bounds.Y).GetValueOrDefault()));
         }

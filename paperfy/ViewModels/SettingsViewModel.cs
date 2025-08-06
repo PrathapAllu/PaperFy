@@ -1,5 +1,4 @@
-﻿using Paperfy.Models;
-using PaperFy.Shared.AppManager;
+﻿using PaperFy.Shared.AppManager;
 using PaperFy.Shared.Windows.Events;
 using PaperFy.Shared.Windows.Services;
 using ReactiveUI;
@@ -14,19 +13,18 @@ namespace Paperfy.ViewModels
 
             public bool DontIncludeTaskBar
             {
-                get => _dontIncludeTaskBar;
+                get => Settings.Instance.DontIncludeTaskBar;
                 set
                 {
-                    this.RaiseAndSetIfChanged(ref _dontIncludeTaskBar, value);
                     Settings.Instance.DontIncludeTaskBar = value;
-                    LocalSettings.Instance.IsDontIncludeTaskBar = value;
+                    this.RaisePropertyChanged();
                 }
             }
 
             public SettingsViewModel()
             {
                 // Initialize from Settings
-                _dontIncludeTaskBar = Settings.Instance.DontIncludeTaskBar;
+
 
                 // Subscribe to changes
                 EventAggregator.Instance.Subscribe<SettingChangedEvent>(OnSettingChanged);
@@ -36,12 +34,7 @@ namespace Paperfy.ViewModels
             {
                 if (settingChanged.Name == "DontIncludeTaskBar")
                 {
-                    var newValue = (bool)settingChanged.Value;
-                    if (_dontIncludeTaskBar != newValue)
-                    {
-                        _dontIncludeTaskBar = newValue;
-                        this.RaisePropertyChanged(nameof(DontIncludeTaskBar));
-                    }
+                    this.RaisePropertyChanged(nameof(DontIncludeTaskBar));
                 }
             }
         }

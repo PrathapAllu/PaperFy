@@ -29,13 +29,11 @@ public class PreDocumentingViewModel : ParentViewModel
 
     public bool EnableDontIncludeTaskBar
     {
-        get => _enableDontIncludeTaskBar;
+        get => Settings.Instance.DontIncludeTaskBar;
         set
         {
-            this.RaiseAndSetIfChanged(ref _enableDontIncludeTaskBar, value);
-            // Sync with both LocalSettings and Settings
-            LocalSettings.Instance.IsDontIncludeTaskBar = value;
             Settings.Instance.DontIncludeTaskBar = value;
+            this.RaisePropertyChanged();
         }
     }
 
