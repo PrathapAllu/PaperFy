@@ -12,6 +12,8 @@ using System.Windows.Input;
 public class MainViewModel : ViewModelBase
 {
     public string UserName { get; set; } = Environment.UserName;
+    public string CurrentDocumentName { get; set; } = string.Empty;
+
     private object _currentView;
     public object CurrentView
     {

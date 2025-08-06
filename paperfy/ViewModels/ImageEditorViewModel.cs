@@ -22,6 +22,7 @@ namespace Paperfy.ViewModels
         private string _selectedImageAnnotation = string.Empty;
         private string _statusMessage = "Ready to export";
         private Dictionary<byte[], string> _imageAnnotations = new();
+        private string _documentName;
 
         public byte[] SelectedImage
         {
@@ -86,9 +87,11 @@ namespace Paperfy.ViewModels
         public ICommand ExportSingleImageCommand { get; }
         public ICommand ExportToDocumentCommand { get; }
 
-        public ImageEditorViewModel()
+        public ImageEditorViewModel(string documentName = "")
         {
             GlobalFontSettings.FontResolver = new SimpleFontResolver();
+
+            _documentName = string.IsNullOrWhiteSpace(documentName) ? "exported_images" : documentName;
 
             LoadImages();
 
@@ -173,7 +176,7 @@ namespace Paperfy.ViewModels
                 {
                     Title = "Export to PDF Document",
                     DefaultExtension = "pdf",
-                    SuggestedFileName = "exported_images.pdf",
+                    SuggestedFileName = $"{_documentName}_image.png",
                     FileTypeChoices = new[]
                     {
                         new FilePickerFileType("PDF Document") { Patterns = new[] { "*.pdf" } }

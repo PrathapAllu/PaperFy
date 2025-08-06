@@ -60,9 +60,12 @@ public class PreDocumentingViewModel : ParentViewModel
         ImportPicturesCommand = ReactiveCommand.Create(ImportPictures);
 
         var canStartRecording = this.WhenAnyValue(x => x.DocumentName, name => !string.IsNullOrWhiteSpace(name));
+
+
         StartRecordingCommand = ReactiveCommand.Create(() =>
         {
             LocalSettings.Instance.IsAppDocumenting = true;
+            Parent.CurrentDocumentName = DocumentName;
             base.Parent.Minimize();
             ApplicationManager.DocumenterService?.StartDocumenting(false);
 

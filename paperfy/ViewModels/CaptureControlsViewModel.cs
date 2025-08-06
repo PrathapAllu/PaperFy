@@ -54,7 +54,7 @@ namespace Paperfy.ViewModels
                 {
                     var window = new ImageEditorWindow
                     {
-                        DataContext = new ImageEditorViewModel()
+                        DataContext = new ImageEditorViewModel(Parent.CurrentDocumentName)
                     };
                     await window.ShowDialog(Parent.MainWindow);
                 }
