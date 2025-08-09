@@ -297,13 +297,10 @@ namespace PaperFy.Shared.Windows.Services
                 args.MouseEvent.ApplicationBundle
             );
 
-            // Store the image with click context
-            ApplicationManager.IimageProcessor?.AddImage(screenshot, clickPoint);
+            ApplicationManager.IimageProcessor?.AddImage(screenshot, clickPoint, clickDescription);
 
-            // Update previous timestamp for next action
             _previousEndTimestamp = args.MouseEvent.Timestamp;
 
-            // Optional: Log for debugging
             System.Diagnostics.Debug.WriteLine($"Captured click: {clickDescription} at ({clickPoint.X}, {clickPoint.Y})");
         }
     }

@@ -125,16 +125,18 @@ namespace Paperfy.ViewModels
             InitializeClickDescriptions(imageList);
         }
 
-        private void InitializeClickDescriptions(List<(byte[] image, Point clickPoint)> markedImages)
+        private void InitializeClickDescriptions(List<(byte[] image, Point clickPoint, string description)> markedImages)
         {
             _clickDescriptions.Clear();
 
             for (int i = 0; i < markedImages.Count; i++)
             {
-                var (image, clickPoint) = markedImages[i];
+                var (image, clickPoint, description) = markedImages[i];
+                var finalDescription = !string.IsNullOrWhiteSpace(description)
+                    ? description
+                    : GenerateDefaultDescription(i + 1, clickPoint);
 
-                var description = GenerateDefaultDescription(i + 1, clickPoint);
-                _clickDescriptions[image] = description;
+                _clickDescriptions[image] = finalDescription;
             }
         }
 

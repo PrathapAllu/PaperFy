@@ -18,21 +18,22 @@ namespace PaperFy.Shared.Windows.Services
 
         public bool HasImages => capturedImages.Any();
 
-        public IEnumerable<(byte[] image, Point clickPoint)> GetMarkedImages()
+        public IEnumerable<(byte[] image, Point clickPoint, string description)> GetMarkedImages()
         {
             foreach (var imageData in capturedImages)
             {
                 var markedImage = DrawEnhancedMarker(imageData.ImageBytes, imageData.ClickPoint);
-                yield return (markedImage, imageData.ClickPoint);
+                yield return (markedImage, imageData.ClickPoint, imageData.Description);
             }
         }
 
-        public void AddImage(byte[] image, Point clickPoint)
+        public void AddImage(byte[] image, Point clickPoint, string description = "")
         {
             capturedImages.Add(new CapturedImageData
             {
                 ImageBytes = image,
                 ClickPoint = clickPoint,
+                Description = description,
                 Timestamp = DateTime.UtcNow
             });
         }
@@ -52,17 +53,14 @@ namespace PaperFy.Shared.Windows.Services
             using var image = new Bitmap(ms);
             using var graphics = Graphics.FromImage(image);
 
-            // Enable anti-aliasing for smooth circles
             graphics.SmoothingMode = SmoothingMode.AntiAlias;
             graphics.CompositingQuality = CompositingQuality.HighQuality;
 
-            // Calculate optimal marker size based on image dimensions
             var optimalSize = CalculateOptimalMarkerSize(image.Width, image.Height);
             var color = ColorTranslator.FromHtml(Settings.Instance.MarkerColor);
 
-            // Draw outer circle (slightly transparent)
             var outerSize = (int)(optimalSize * 1.4f);
-            var outerColor = Color.FromArgb(50, color); // 30% opacity
+            var outerColor = Color.FromArgb(50, color);
             using (var outerBrush = new SolidBrush(outerColor))
             {
                 graphics.FillEllipse(outerBrush,
@@ -72,7 +70,6 @@ namespace PaperFy.Shared.Windows.Services
                     outerSize);
             }
 
-            // Draw main circle (solid)
             using (var mainBrush = new SolidBrush(color))
             {
                 graphics.FillEllipse(mainBrush,
@@ -93,7 +90,6 @@ namespace PaperFy.Shared.Windows.Services
                     innerSize);
             }
 
-            // Draw border for definition
             var borderPen = new Pen(Color.FromArgb(150, Color.DarkRed), 1.5f);
             graphics.DrawEllipse(borderPen,
                 point.X - optimalSize / 2,
@@ -108,18 +104,11 @@ namespace PaperFy.Shared.Windows.Services
 
         private int CalculateOptimalMarkerSize(int imageWidth, int imageHeight)
         {
-            // Base size from settings
             var baseSize = Settings.Instance.MarkerSize;
-
-            // Scale based on image resolution
             var avgDimension = (imageWidth + imageHeight) / 2.0f;
-            var scaleFactor = avgDimension / 1000.0f; // Assume 1000px as baseline
-
-            // Clamp scale factor to reasonable bounds
+            var scaleFactor = avgDimension / 1000.0f;
             scaleFactor = Math.Max(0.5f, Math.Min(2.0f, scaleFactor));
-
             var calculatedSize = (int)(baseSize * scaleFactor);
-
             return Math.Max(8, Math.Min(60, calculatedSize));
         }
 
@@ -132,6 +121,7 @@ namespace PaperFy.Shared.Windows.Services
         {
             public byte[] ImageBytes { get; set; }
             public Point ClickPoint { get; set; }
+            public string Description { get; set; }
             public DateTime Timestamp { get; set; }
         }
     }
