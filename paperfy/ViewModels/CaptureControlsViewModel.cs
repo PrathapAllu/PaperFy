@@ -74,6 +74,14 @@ namespace Paperfy.ViewModels
 
             CancelDocumentingCommand = ReactiveCommand.Create(() => { });
             ToggleAudioDocumentingCommand = ReactiveCommand.Create(() => { });
+
+            LocalSettings.Instance.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == nameof(LocalSettings.IsAppDocumenting))
+                {
+                    this.RaisePropertyChanged(nameof(CanCreateDocument));
+                }
+            };
         }
     }
 }

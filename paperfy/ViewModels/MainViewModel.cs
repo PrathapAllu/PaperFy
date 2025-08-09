@@ -73,4 +73,9 @@ public class MainViewModel : ViewModelBase
             MainWindow.WindowState = WindowState.Minimized;
         }
     }
+
+    public void ResetDocumentState()
+    {
+        CurrentDocumentName = string.Empty;
+    }
 }

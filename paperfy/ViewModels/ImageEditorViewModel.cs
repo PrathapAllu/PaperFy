@@ -1,5 +1,6 @@
 ﻿using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Platform.Storage;
+using Paperfy.Models;
 using Paperfy.Services;
 using PaperFy.Shared.AppManager;
 using PdfSharp.Drawing;
@@ -155,6 +156,9 @@ namespace Paperfy.ViewModels
                     await using var stream = await file.OpenWriteAsync();
                     await stream.WriteAsync(SelectedImage);
                     StatusMessage = "Image exported successfully";
+
+                    // Reset application state after successful export
+                    ResetApplicationState();
                 }
                 else
                 {
@@ -253,6 +257,9 @@ namespace Paperfy.ViewModels
                     document.Close();
 
                     StatusMessage = $"PDF exported successfully with {Images.Count} images";
+
+                    // Reset application state after successful export
+                    ResetApplicationState();
                 }
                 else
                 {
@@ -262,6 +269,31 @@ namespace Paperfy.ViewModels
             catch (Exception ex)
             {
                 StatusMessage = $"PDF export failed: {ex.Message}";
+            }
+        }
+
+        private void ResetApplicationState()
+        {
+            try
+            {
+                // Reset local settings
+                LocalSettings.Instance.IsAppDocumenting = false;
+
+                // Clear captured images
+                ApplicationManager.IimageProcessor?.ClearImages();
+
+                // Reset documenter service state if available
+                if (ApplicationManager.DocumenterService != null)
+                {
+                    // The service should already be stopped, but ensure it's in idle state
+                    // This is handled in the DocumenterService.StopDocumenting method
+                }
+
+                System.Diagnostics.Debug.WriteLine("Application state reset successfully");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error resetting application state: {ex.Message}");
             }
         }
     }
