@@ -1,13 +1,15 @@
+using Interop.UIAutomationClient;
 using PaperFy.Shared.Interface;
 using PaperFy.Shared.Windows.Models;
-using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
 
 namespace PaperFy.Shared.Windows.Services
 {
-    public class WindowsControlCaptureService : IControlCaptureService
+    public class WindowsControlCaptureService : IControlCaptureService, IDisposable
     {
+        private readonly IUIAutomation _automation;
+
         [DllImport("user32.dll")]
         private static extern IntPtr WindowFromPoint(POINT Point);
 
@@ -18,51 +20,154 @@ namespace PaperFy.Shared.Windows.Services
         private static extern int GetClassName(IntPtr hWnd, StringBuilder lpClassName, int nMaxCount);
 
         [DllImport("user32.dll")]
+        private static extern IntPtr ChildWindowFromPointEx(IntPtr hwnd, POINT pt, uint flags);
+
+        [DllImport("user32.dll")]
+        private static extern bool ScreenToClient(IntPtr hWnd, ref POINT lpPoint);
+
+        [DllImport("user32.dll")]
         private static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
 
         [DllImport("user32.dll")]
-        private static extern IntPtr GetParent(IntPtr hWnd);
-
-        [DllImport("user32.dll")]
-        private static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
+        private static extern bool IsWindowVisible(IntPtr hWnd);
 
         [StructLayout(LayoutKind.Sequential)]
-        private struct POINT
+        public struct POINT
         {
-            public int x;
-            public int y;
+            public int X;
+            public int Y;
         }
 
-        [StructLayout(LayoutKind.Sequential)]
-        private struct RECT
+        private const uint CWP_SKIPINVISIBLE = 0x0001;
+        private const uint CWP_SKIPDISABLED = 0x0002;
+        private const uint CWP_SKIPTRANSPARENT = 0x0004;
+
+        public WindowsControlCaptureService()
         {
-            public int Left;
-            public int Top;
-            public int Right;
-            public int Bottom;
+            try
+            {
+                _automation = new CUIAutomation();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"UI Automation failed to initialize: {ex.Message}");
+                _automation = null;
+            }
         }
 
         public string GetLabelAtPosition(Point point)
         {
             try
             {
-                var windowPoint = new POINT { x = point.X, y = point.Y };
-                IntPtr hWnd = WindowFromPoint(windowPoint);
+                System.Diagnostics.Debug.WriteLine($"Getting label at position: ({point.X}, {point.Y})");
 
-                if (hWnd == IntPtr.Zero)
-                    return "Unknown location";
+                string result = TryUIAutomation(point);
+                if (!string.IsNullOrEmpty(result))
+                {
+                    System.Diagnostics.Debug.WriteLine($"UI Automation result: {result}");
+                    return result;
+                }
 
-                // Get application info
-                var appInfo = GetApplicationInfo(hWnd);
-                var controlInfo = GetControlInfo(hWnd);
-                var contextInfo = GetContextualInfo(hWnd, point);
+                result = TryWin32Approach(point);
+                if (!string.IsNullOrEmpty(result))
+                {
+                    System.Diagnostics.Debug.WriteLine($"Win32 result: {result}");
+                    return result;
+                }
 
-                // Build descriptive text
-                return BuildClickDescription(appInfo, controlInfo, contextInfo);
+                System.Diagnostics.Debug.WriteLine("No text found, returning coordinate");
+                return $"Click at ({point.X}, {point.Y})";
             }
             catch (Exception ex)
             {
-                return "Click captured";
+                System.Diagnostics.Debug.WriteLine($"Exception in GetLabelAtPosition: {ex.Message}");
+                return $"Click at ({point.X}, {point.Y})";
+            }
+        }
+
+        private string TryUIAutomation(Point point)
+        {
+            if (_automation == null)
+                return string.Empty;
+
+            try
+            {
+                var element = _automation.ElementFromPoint(new tagPOINT { x = point.X, y = point.Y });
+                if (element == null)
+                    return string.Empty;
+
+                var name = element.CurrentName?.Trim();
+                if (!string.IsNullOrEmpty(name) && name != "Desktop")
+                {
+                    System.Diagnostics.Debug.WriteLine($"Found element name: {name}");
+                    return IControlCaptureService.GetTruncatedLabel(name);
+                }
+
+                var controlType = element.CurrentLocalizedControlType?.Trim();
+                if (!string.IsNullOrEmpty(controlType))
+                {
+                    System.Diagnostics.Debug.WriteLine($"Found control type: {controlType}");
+                    return IControlCaptureService.GetTruncatedLabel(controlType);
+                }
+
+                var className = element.CurrentClassName?.Trim();
+                if (!string.IsNullOrEmpty(className))
+                {
+                    System.Diagnostics.Debug.WriteLine($"Found class name: {className}");
+                    return IControlCaptureService.GetTruncatedLabel(GetFriendlyControlName(className));
+                }
+
+                return string.Empty;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"UI Automation error: {ex.Message}");
+                return string.Empty;
+            }
+        }
+
+        private string TryWin32Approach(Point point)
+        {
+            try
+            {
+                var windowHandle = WindowFromPoint(new POINT { X = point.X, Y = point.Y });
+                if (windowHandle == IntPtr.Zero)
+                    return string.Empty;
+
+                System.Diagnostics.Debug.WriteLine($"Found window handle: {windowHandle}");
+
+                var clientPoint = new POINT { X = point.X, Y = point.Y };
+                ScreenToClient(windowHandle, ref clientPoint);
+
+                var childHandle = ChildWindowFromPointEx(windowHandle, clientPoint,
+                    CWP_SKIPINVISIBLE | CWP_SKIPDISABLED | CWP_SKIPTRANSPARENT);
+
+                if (childHandle != IntPtr.Zero && childHandle != windowHandle)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Found child window: {childHandle}");
+                    var childText = GetWindowText(childHandle);
+                    if (!string.IsNullOrEmpty(childText))
+                        return IControlCaptureService.GetTruncatedLabel(childText);
+
+                    var childClassName = GetWindowClassName(childHandle);
+                    if (!string.IsNullOrEmpty(childClassName))
+                        return IControlCaptureService.GetTruncatedLabel(GetFriendlyControlName(childClassName));
+                }
+
+                var windowText = GetWindowText(windowHandle);
+                if (!string.IsNullOrEmpty(windowText))
+                    return IControlCaptureService.GetTruncatedLabel(windowText);
+
+                var className = GetWindowClassName(windowHandle);
+                if (!string.IsNullOrEmpty(className))
+                    return IControlCaptureService.GetTruncatedLabel(GetFriendlyControlName(className));
+
+                return string.Empty;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Win32 approach error: {ex.Message}");
+                return string.Empty;
             }
         }
 
@@ -70,18 +175,11 @@ namespace PaperFy.Shared.Windows.Services
         {
             try
             {
-                var windowPoint = new POINT { x = point.X, y = point.Y };
-                IntPtr hWnd = WindowFromPoint(windowPoint);
-
-                if (hWnd == IntPtr.Zero)
+                if (_automation == null)
                     return false;
 
-                var className = new StringBuilder(256);
-                GetClassName(hWnd, className, className.Capacity);
-
-                // Check for password field indicators
-                return className.ToString().ToLower().Contains("edit") &&
-                       IsPasswordControl(hWnd);
+                var element = _automation.ElementFromPoint(new tagPOINT { x = point.X, y = point.Y });
+                return element?.CurrentIsPassword != 0;
             }
             catch
             {
@@ -89,278 +187,82 @@ namespace PaperFy.Shared.Windows.Services
             }
         }
 
-        private ApplicationInfo GetApplicationInfo(IntPtr hWnd)
+        private string GetWindowText(IntPtr hWnd)
         {
             try
             {
-                GetWindowThreadProcessId(hWnd, out uint processId);
-                var process = Process.GetProcessById((int)processId);
+                if (!IsWindowVisible(hWnd))
+                    return string.Empty;
 
-                var windowTitle = new StringBuilder(256);
-                GetWindowText(hWnd, windowTitle, windowTitle.Capacity);
+                var sb = new StringBuilder(512);
+                var length = GetWindowText(hWnd, sb, sb.Capacity);
+                var text = length > 0 ? sb.ToString().Trim() : string.Empty;
 
-                return new ApplicationInfo
-                {
-                    ProcessName = process.ProcessName,
-                    WindowTitle = windowTitle.ToString(),
-                    ExecutablePath = process.MainModule?.FileName ?? "",
-                    ApplicationName = process.MainModule?.FileVersionInfo?.ProductName ?? process.ProcessName
-                };
+                if (!string.IsNullOrEmpty(text))
+                    System.Diagnostics.Debug.WriteLine($"Window text: '{text}'");
+
+                return text;
             }
-            catch
+            catch (Exception ex)
             {
-                return new ApplicationInfo { ProcessName = "Unknown", ApplicationName = "Unknown Application" };
+                System.Diagnostics.Debug.WriteLine($"GetWindowText error: {ex.Message}");
+                return string.Empty;
             }
         }
 
-        private ControlInfo GetControlInfo(IntPtr hWnd)
+        private string GetWindowClassName(IntPtr hWnd)
         {
-            var className = new StringBuilder(256);
-            var windowText = new StringBuilder(256);
-
-            GetClassName(hWnd, className, className.Capacity);
-            GetWindowText(hWnd, windowText, windowText.Capacity);
-
-            return new ControlInfo
+            try
             {
-                ClassName = className.ToString(),
-                Text = windowText.ToString(),
-                ControlType = DetermineControlType(className.ToString(), windowText.ToString())
+                var sb = new StringBuilder(256);
+                var length = GetClassName(hWnd, sb, sb.Capacity);
+                var className = length > 0 ? sb.ToString() : string.Empty;
+
+                if (!string.IsNullOrEmpty(className))
+                    System.Diagnostics.Debug.WriteLine($"Class name: '{className}'");
+
+                return className;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"GetClassName error: {ex.Message}");
+                return string.Empty;
+            }
+        }
+
+        private string GetFriendlyControlName(string className)
+        {
+            var friendly = className.ToLower() switch
+            {
+                "button" => "Button",
+                "edit" => "Text Field",
+                "static" => "Label",
+                "listbox" => "List Box",
+                "combobox" => "Dropdown",
+                "scrollbar" => "Scroll Bar",
+                "msctls_trackbar32" => "Slider",
+                "tooltips_class32" => "Tooltip",
+                "richedit20w" => "Rich Text Box",
+                var x when x.Contains("button") => "Button",
+                var x when x.Contains("edit") => "Text Field",
+                var x when x.Contains("list") => "List",
+                _ => className
             };
+
+            System.Diagnostics.Debug.WriteLine($"Friendly name for '{className}': '{friendly}'");
+            return friendly;
         }
 
-        private ContextualInfo GetContextualInfo(IntPtr hWnd, Point clickPoint)
+        public void Dispose()
         {
-            var context = new ContextualInfo();
-
-            // Check if it's a file explorer window
-            if (IsFileExplorer(hWnd))
+            if (_automation != null)
             {
-                context.IsFileExplorer = true;
-                context.FilePath = GetSelectedFilePath(hWnd);
-            }
-
-            // Check for browser
-            else if (IsBrowser(hWnd))
-            {
-                context.IsBrowser = true;
-                context.Url = GetBrowserUrl(hWnd);
-            }
-
-            // Check for common applications
-            else if (IsVisualStudio(hWnd))
-            {
-                context.IsIDE = true;
-                context.FileName = GetActiveFileName(hWnd);
-            }
-
-            return context;
-        }
-
-        private string BuildClickDescription(ApplicationInfo appInfo, ControlInfo controlInfo, ContextualInfo contextInfo)
-        {
-            var description = new StringBuilder();
-
-            // Start with action
-            description.Append("Click on ");
-
-            // Add specific control information if available
-            if (!string.IsNullOrEmpty(controlInfo.Text) && controlInfo.Text.Trim().Length > 0)
-            {
-                description.Append($"\"{controlInfo.Text.Trim()}\" ");
-            }
-            else if (controlInfo.ControlType != "Unknown")
-            {
-                description.Append($"{controlInfo.ControlType} ");
-            }
-
-            // Add contextual information
-            if (contextInfo.IsFileExplorer && !string.IsNullOrEmpty(contextInfo.FilePath))
-            {
-                description.Append($"in File Explorer ({System.IO.Path.GetFileName(contextInfo.FilePath)}) ");
-            }
-            else if (contextInfo.IsBrowser && !string.IsNullOrEmpty(contextInfo.Url))
-            {
-                var domain = GetDomainFromUrl(contextInfo.Url);
-                description.Append($"in browser ({domain}) ");
-            }
-            else if (contextInfo.IsIDE && !string.IsNullOrEmpty(contextInfo.FileName))
-            {
-                description.Append($"in {appInfo.ApplicationName} ({System.IO.Path.GetFileName(contextInfo.FileName)}) ");
-            }
-            else
-            {
-                description.Append($"in {appInfo.ApplicationName} ");
-            }
-
-            // Add window context if different from application
-            if (!string.IsNullOrEmpty(appInfo.WindowTitle) &&
-                appInfo.WindowTitle != appInfo.ApplicationName &&
-                !description.ToString().Contains(appInfo.WindowTitle))
-            {
-                description.Append($"- {appInfo.WindowTitle}");
-            }
-
-            return IControlCaptureService.GetTruncatedLabel(description.ToString().Trim());
-        }
-
-        private string DetermineControlType(string className, string text)
-        {
-            className = className.ToLower();
-
-            if (className.Contains("button")) return "Button";
-            if (className.Contains("edit")) return "Text Box";
-            if (className.Contains("static")) return "Label";
-            if (className.Contains("listbox")) return "List";
-            if (className.Contains("combobox")) return "Dropdown";
-            if (className.Contains("scrollbar")) return "Scrollbar";
-            if (className.Contains("menu")) return "Menu";
-            if (className.Contains("tab")) return "Tab";
-            if (className.Contains("tree")) return "Tree View";
-            if (className.Contains("toolbar")) return "Toolbar";
-
-            return "Unknown";
-        }
-
-        private bool IsFileExplorer(IntPtr hWnd)
-        {
-            try
-            {
-                GetWindowThreadProcessId(hWnd, out uint processId);
-                var process = Process.GetProcessById((int)processId);
-                return process.ProcessName.Equals("explorer", StringComparison.OrdinalIgnoreCase);
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        private bool IsBrowser(IntPtr hWnd)
-        {
-            try
-            {
-                GetWindowThreadProcessId(hWnd, out uint processId);
-                var process = Process.GetProcessById((int)processId);
-                var processName = process.ProcessName.ToLower();
-
-                return processName.Contains("chrome") ||
-                       processName.Contains("firefox") ||
-                       processName.Contains("edge") ||
-                       processName.Contains("iexplore") ||
-                       processName.Contains("opera");
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        private bool IsVisualStudio(IntPtr hWnd)
-        {
-            try
-            {
-                GetWindowThreadProcessId(hWnd, out uint processId);
-                var process = Process.GetProcessById((int)processId);
-                var processName = process.ProcessName.ToLower();
-
-                return processName.Contains("devenv") || processName.Contains("code");
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        private string GetSelectedFilePath(IntPtr hWnd)
-        {
-            // This would require more complex implementation using IShellWindows
-            // For now, return a placeholder that could be enhanced
-            return "";
-        }
-
-        private string GetBrowserUrl(IntPtr hWnd)
-        {
-            // This would require browser-specific automation
-            // For now, return empty - could be enhanced with browser automation
-            return "";
-        }
-
-        private string GetActiveFileName(IntPtr hWnd)
-        {
-            // Extract file name from window title for IDE applications
-            try
-            {
-                var windowTitle = new StringBuilder(256);
-                GetWindowText(hWnd, windowTitle, windowTitle.Capacity);
-                var title = windowTitle.ToString();
-
-                // Common IDE patterns
-                var patterns = new[] { " - ", " — ", " | " };
-                foreach (var pattern in patterns)
+                try
                 {
-                    if (title.Contains(pattern))
-                    {
-                        var parts = title.Split(new[] { pattern }, StringSplitOptions.RemoveEmptyEntries);
-                        if (parts.Length > 0)
-                        {
-                            // Usually the file name is the first part
-                            return parts[0].Trim();
-                        }
-                    }
+                    Marshal.ReleaseComObject(_automation);
                 }
-
-                return "";
+                catch { }
             }
-            catch
-            {
-                return "";
-            }
-        }
-
-        private string GetDomainFromUrl(string url)
-        {
-            try
-            {
-                var uri = new Uri(url);
-                return uri.Host;
-            }
-            catch
-            {
-                return "web page";
-            }
-        }
-
-        private bool IsPasswordControl(IntPtr hWnd)
-        {
-            // This would require checking window styles and properties
-            // For now, return false - could be enhanced with Windows API calls
-            return false;
-        }
-
-        private class ApplicationInfo
-        {
-            public string ProcessName { get; set; } = "";
-            public string ApplicationName { get; set; } = "";
-            public string WindowTitle { get; set; } = "";
-            public string ExecutablePath { get; set; } = "";
-        }
-
-        private class ControlInfo
-        {
-            public string ClassName { get; set; } = "";
-            public string Text { get; set; } = "";
-            public string ControlType { get; set; } = "";
-        }
-
-        private class ContextualInfo
-        {
-            public bool IsFileExplorer { get; set; }
-            public bool IsBrowser { get; set; }
-            public bool IsIDE { get; set; }
-            public string FilePath { get; set; } = "";
-            public string Url { get; set; } = "";
-            public string FileName { get; set; } = "";
         }
     }
 }

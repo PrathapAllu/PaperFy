@@ -275,15 +275,12 @@ namespace PaperFy.Shared.Windows.Services
             LastMouseEvent = args.MouseEvent;
             var clickPoint = new Point(LastMouseEvent.X, LastMouseEvent.Y);
 
-            // Get screenshot and screen info
             var (screenshot, scaling, relativePoint) = GetImmediateScreenshotInformation(clickPoint, LastMouseEvent.Timestamp);
 
             if (screenshot == null) return;
 
-            // Get contextual information about the click
-            string clickDescription = ControlCaptureService?.GetLabelAtPosition(clickPoint) ?? "Click captured";
+            string clickDescription = $"Click in {args.MouseEvent.ApplicationName ?? "Unknown App"}";
 
-            // Create mouse action with enhanced information
             var mouseAction = new MouseAction(
                 clickDescription,
                 _previousEndTimestamp > 0 ? _previousEndTimestamp : StartTimestamp,

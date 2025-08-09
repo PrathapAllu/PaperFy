@@ -46,6 +46,7 @@ namespace PaperFy.Shared.AppManager
         private static void InitializeServices()
         {
             IimageProcessor = new ImageProcessor();
+            ControlCaptureService = new WindowsControlCaptureService();
             DocumenterService = new DocumenterService(ScreenCaptureService, ControlCaptureService);
         }
     }
