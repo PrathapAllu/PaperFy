@@ -2,6 +2,7 @@
 using Avalonia.Platform.Storage;
 using Paperfy.Services;
 using PaperFy.Shared.AppManager;
+using PaperFy.Shared.Windows.Models;
 using PdfSharp.Drawing;
 using PdfSharp.Fonts;
 using PdfSharp.Pdf;
@@ -23,6 +24,7 @@ namespace Paperfy.ViewModels
         private string _statusMessage = "Ready to export";
         private Dictionary<byte[], string> _imageAnnotations = new();
         private string _documentName;
+        private Dictionary<byte[], string> _clickDescriptions = new();
 
         public byte[] SelectedImage
         {
@@ -40,10 +42,21 @@ namespace Paperfy.ViewModels
                 this.RaisePropertyChanged(nameof(HasSelectedImage));
                 this.RaisePropertyChanged(nameof(ShowPlaceholder));
 
-                // Load annotation for newly selected image
-                if (value != null && _imageAnnotations.TryGetValue(value, out var annotation))
+                if (value != null)
                 {
-                    SelectedImageAnnotation = annotation;
+                    if (_imageAnnotations.TryGetValue(value, out var annotation))
+                    {
+                        SelectedImageAnnotation = annotation;
+                    }
+                    else if (_clickDescriptions.TryGetValue(value, out var clickDescription))
+                    {
+                        SelectedImageAnnotation = clickDescription;
+                        _imageAnnotations[value] = clickDescription; // Store it
+                    }
+                    else
+                    {
+                        SelectedImageAnnotation = string.Empty;
+                    }
                 }
                 else
                 {
@@ -106,7 +119,45 @@ namespace Paperfy.ViewModels
         private void LoadImages()
         {
             var markedImages = ApplicationManager.IimageProcessor.GetMarkedImages();
+            var imageList = markedImages.ToList();
             Images = new ObservableCollection<byte[]>(markedImages.Select(x => x.image));
+
+            InitializeClickDescriptions(imageList);
+        }
+
+        private void InitializeClickDescriptions(List<(byte[] image, Point clickPoint)> markedImages)
+        {
+            _clickDescriptions.Clear();
+
+            for (int i = 0; i < markedImages.Count; i++)
+            {
+                var (image, clickPoint) = markedImages[i];
+
+                var description = GenerateDefaultDescription(i + 1, clickPoint);
+                _clickDescriptions[image] = description;
+            }
+        }
+
+        private string GenerateDefaultDescription(int imageNumber, Point clickPoint)
+        {
+            return $"Step {imageNumber}: Click at position ({clickPoint.X}, {clickPoint.Y})";
+        }
+
+        public void UpdateClickDescription(byte[] image, string description)
+        {
+            if (image != null && !string.IsNullOrWhiteSpace(description))
+            {
+                _clickDescriptions[image] = description;
+
+                if (_selectedImage != null && _selectedImage.SequenceEqual(image))
+                {
+                    if (string.IsNullOrWhiteSpace(_selectedImageAnnotation) ||
+                        _selectedImageAnnotation == _clickDescriptions.GetValueOrDefault(image))
+                    {
+                        SelectedImageAnnotation = description;
+                    }
+                }
+            }
         }
 
         private async void ExportSingleImage()

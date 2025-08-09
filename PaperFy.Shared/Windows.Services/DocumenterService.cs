@@ -261,51 +261,50 @@ namespace PaperFy.Shared.Windows.Services
             return (item, screen?.Scaling ?? 1f, new global::PaperFy.Shared.Windows.Models.Point((point.X - screen?.Bounds.X).GetValueOrDefault(), (point.Y - screen?.Bounds.Y).GetValueOrDefault()));
         }
 
+        // Enhanced OnMouseCaptureEvent method for DocumenterService.cs
+        // Replace the existing OnMouseCaptureEvent method with this implementation
+
         private void OnMouseCaptureEvent(MouseCaptureEvent args)
         {
             if (State != DocumentingState.Recording)
-            {
                 return;
-            }
+
             if (!IsValidMousePoint(args.MouseEvent.X, args.MouseEvent.Y))
-            {
                 return;
-            }
-            byte[] array = null;
-            float num = 0f;
-            global::PaperFy.Shared.Windows.Models.Point point = default(global::PaperFy.Shared.Windows.Models.Point);
 
             LastMouseEvent = args.MouseEvent;
-            new global::PaperFy.Shared.Windows.Models.Point(LastMouseEvent.X, LastMouseEvent.Y);
-            (byte[], float, global::PaperFy.Shared.Windows.Models.Point) immediateScreenshotInformation = GetImmediateScreenshotInformation(new global::PaperFy.Shared.Windows.Models.Point(LastMouseEvent.X, LastMouseEvent.Y), LastMouseEvent.Timestamp);
-            array = immediateScreenshotInformation.Item1;
-            num = immediateScreenshotInformation.Item2;
-            point = immediateScreenshotInformation.Item3;
-            MouseAction mouseAction = new MouseAction(
-                null,
+            var clickPoint = new Point(LastMouseEvent.X, LastMouseEvent.Y);
+
+            // Get screenshot and screen info
+            var (screenshot, scaling, relativePoint) = GetImmediateScreenshotInformation(clickPoint, LastMouseEvent.Timestamp);
+
+            if (screenshot == null) return;
+
+            // Get contextual information about the click
+            string clickDescription = ControlCaptureService?.GetLabelAtPosition(clickPoint) ?? "Click captured";
+
+            // Create mouse action with enhanced information
+            var mouseAction = new MouseAction(
+                clickDescription,
                 _previousEndTimestamp > 0 ? _previousEndTimestamp : StartTimestamp,
                 args.MouseEvent.Timestamp,
-                point,
+                relativePoint,
                 args.MouseEvent.Button,
                 1u,
-                num,
+                scaling,
                 new Screenshot(null, ScreenshotUploadStatus.Waiting),
                 args.MouseEvent.ApplicationName,
                 args.MouseEvent.ApplicationBundle
             );
 
-            mouseAction.TargetText = ControlCaptureService?.GetLabelAtPosition(new global::PaperFy.Shared.Windows.Models.Point(args.MouseEvent.X, args.MouseEvent.Y));
-
-            if (State != DocumentingState.Recording) return;
-            if (!IsValidMousePoint(args.MouseEvent.X, args.MouseEvent.Y)) return;
-
-            LastMouseEvent = args.MouseEvent;
-            var clickPoint = new Point(LastMouseEvent.X, LastMouseEvent.Y);
-
-            var (screenshot, _, _) = GetImmediateScreenshotInformation(clickPoint, LastMouseEvent.Timestamp);
-
+            // Store the image with click context
             ApplicationManager.IimageProcessor?.AddImage(screenshot, clickPoint);
-            //SaveScreenshotLocally(array, mouseAction);
+
+            // Update previous timestamp for next action
+            _previousEndTimestamp = args.MouseEvent.Timestamp;
+
+            // Optional: Log for debugging
+            System.Diagnostics.Debug.WriteLine($"Captured click: {clickDescription} at ({clickPoint.X}, {clickPoint.Y})");
         }
     }
 }

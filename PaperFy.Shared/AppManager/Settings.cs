@@ -15,7 +15,7 @@ namespace PaperFy.Shared.AppManager
         private bool captureSpecialKeys = true;
         private bool dontIncludeTaskBar = false;
 
-        internal int markerSize = 10;
+        internal int markerSize = 50;
         internal string markerColor = "#FF0000";
 
         private int imagesPerPage = 2;
